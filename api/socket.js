@@ -7,7 +7,6 @@ export function setupSocket(server, origin) {
       credentials: true,
     },
   });
-
   io.on("connection", (socket) => {
     console.log("a user connected");
     socket.on("disconnect", () => {
