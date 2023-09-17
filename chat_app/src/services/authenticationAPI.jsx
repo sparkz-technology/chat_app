@@ -8,3 +8,17 @@ export async function login(value) {
   const data = response.data;
   return data;
 }
+
+export async function signup(value) {
+  const { name, username, email, password } = value;
+  console.log(value);
+  const response = await axios.post("http://localhost:8000/auth/signup", {
+    name,
+    username,
+    email,
+    password,
+  });
+  console.log(response);
+  const data = response.data;
+  return data;
+}

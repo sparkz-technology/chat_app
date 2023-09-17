@@ -6,17 +6,21 @@ import Input from "../../ui/Input";
 import Button from "../../ui/Button";
 import Label from "../../ui/Label";
 import MiniSpinner from "../../ui/MiniSpinner";
-import useLogin from "./useLogin";
+import useSignup from "./useSignup";
 import StyledLink from "../../ui/StyledLink";
-const LoginForm = () => {
-  const { mutate, isLoading } = useLogin();
+const SignUpForm = () => {
+  const { mutate, isLoading } = useSignup();
 
   const formik = useFormik({
     initialValues: {
+      name: "",
+      username: "",
       email: "",
       password: "",
     },
     validationSchema: Yup.object({
+      name: Yup.string().required("Required"),
+      username: Yup.string().required("Required"),
       email: Yup.string().email("Invalid email address").required("Required"),
       password: Yup.string().required("Required"),
     }),
@@ -27,8 +31,45 @@ const LoginForm = () => {
 
   return (
     <Container>
-      <Title> Login </Title>
+      <Title> Sign up </Title>
       <FormWrapper onSubmit={formik.handleSubmit} noValidate>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div style={{ width: "48%" }}>
+            <Label htmlFor="name">Name</Label>
+            <Input
+              id="name"
+              name="name"
+              type="text"
+              placeholder="Name"
+              datatype="email"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.name}
+            />
+            {formik.touched.name && formik.errors.name ? (
+              <Error>{formik.errors.name}</Error>
+            ) : null}
+          </div>
+          <div style={{ width: "48%" }}>
+            <Label htmlFor="username">Username</Label>
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              placeholder="Username"
+              datatype="username"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.username}
+            />
+            {formik.touched.username && formik.errors.username ? (
+              <Error>{formik.errors.username}</Error>
+            ) : null}
+          </div>
+        </div>
+
+        <Gap />
+
         <Label htmlFor="email">Email</Label>
         <Input
           id="email"
@@ -59,16 +100,22 @@ const LoginForm = () => {
           <Error>{formik.errors.password}</Error>
         ) : null}
         <Gap />
-        <Button type="submit">{isLoading ? <MiniSpinner /> : "Login"}</Button>
+        <p>
+          By clicking the Sign Up button, you agree to our Terms & Conditions
+          and Privacy Policy.
+        </p>
+        <Button type="submit">
+          {isLoading ? <MiniSpinner /> : "Create Account"}
+        </Button>
       </FormWrapper>
-      <StyledLink to="/signup" style={{ marginTop: "20px" }}>
-        Don&apos;t have an account? Sign up
+      <StyledLink to="/" style={{ marginTop: "20px" }}>
+        Already have an account? Login
       </StyledLink>
     </Container>
   );
 };
 
-export default LoginForm;
+export default SignUpForm;
 
 const Title = styles.h1`
   font-size: 2em;
@@ -99,6 +146,11 @@ const Container = styles.div`
 const FormWrapper = styles.form`
 
   width: 100%;
+  p{
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
 `;
 const Gap = styles.div`
   margin-bottom: 2rem;

@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Login from "./pages/Login";
 import GlobalStyle from "./styles/GlobalStyle";
 import ToasterContainer from "./ui/ToasterContainer";
+import Signup from "./pages/Signup";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -14,7 +15,10 @@ const queryClient = new QueryClient({
   },
 });
 
-const router = createBrowserRouter([{ path: "/", element: <Login /> }]);
+const router = createBrowserRouter([
+  { path: "/", element: <Login /> },
+  { path: "/signup", element: <Signup /> },
+]);
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
