@@ -73,3 +73,19 @@ export async function postLogin(req, res, next) {
     next(err);
   }
 }
+
+export async function logOut(req, res, next) {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      const error = new Error("User id is required");
+      error.statusCode = 422;
+      throw error;
+    }
+    onlineUsers.delete(req.params.id);
+    return res.status(200).send();
+  } catch (error) {
+    if (!error.statusCode) error.statusCode = 500;
+    next(error);
+  }
+}

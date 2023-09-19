@@ -22,3 +22,11 @@ export async function signup(value) {
   const data = response.data;
   return data;
 }
+
+export async function logout(userId) {
+  const response = await axios.post("http://localhost:8000/auth/logout", {
+    userId,
+  });
+  const data = response.data;
+  return data;
+}

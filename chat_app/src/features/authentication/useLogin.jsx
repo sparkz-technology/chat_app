@@ -9,7 +9,7 @@ export default function useLogin() {
     onSuccess: (data) => {
       toast.success("Login successful");
       localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("userId", data.userId);
     },
     onError: (error) => {
       toast.error(error.message);

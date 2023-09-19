@@ -6,6 +6,14 @@ const userSchema = new mongoose.Schema(
     username: String,
     email: String,
     password: String,
+    isAvatarImageSet: {
+      type: Boolean,
+      default: false,
+    },
+    avatarImage: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true }
 );

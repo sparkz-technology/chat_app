@@ -10,16 +10,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@multiavatar/multiavatar": "^1.0.7",
     "@reduxjs/toolkit": "^1.9.5",
     "@tanstack/react-query": "^4.35.3",
     "@tanstack/react-query-devtools": "^4.35.3",
     "axios": "^1.5.0",
+    "buffer": "^6.0.3",
     "formik": "^2.4.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
     "react-router-dom": "^6.16.0",
     "redux": "^4.2.1",
+    "socket.io-client": "^4.7.2",
     "styled-components": "^6.0.8",
     "yup": "^1.2.0"
   },

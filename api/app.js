@@ -7,6 +7,8 @@ import fs from "fs";
 import config from "./config.js";
 import errorMiddleware from "./middlewares/error.js";
 import authRoutes from "./routes/auth.js";
+import userRoutes from "./routes/user.js";
+import messageRoutes from "./routes/message.js";
 
 const { ORIGIN, NODE_ENV } = config;
 
@@ -32,6 +34,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/auth", authRoutes);
+app.use("/user", userRoutes);
+app.use("/msg", messageRoutes);
 
 app.use(errorMiddleware);
 
