@@ -13,13 +13,13 @@ export default function SetAvatar() {
     useGetAvatar(type);
   const [avatars, setAvatars] = useState([]);
   useEffect(() => {
-    if (avatarData && avatarData.length > 0) {
+    if (type < 3 && avatarData) {
       const buffer = Buffer.from(avatarData, "binary");
       const string = buffer.toString("base64");
       setAvatars((prev) => [...prev, string]);
       setType((index) => index + 1);
     }
-  }, [avatarData]);
+  }, [avatarData, type]);
 
   const [selectedAvatar, setSelectedAvatar] = useState(null);
 
