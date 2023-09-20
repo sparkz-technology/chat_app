@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import { logout } from "../../services/authenticationAPI";
 
-export default function useLogin() {
+export default function useLogout() {
   const navigate = useNavigate();
   const userId = localStorage.getItem("userId");
 

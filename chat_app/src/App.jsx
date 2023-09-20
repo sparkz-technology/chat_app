@@ -6,7 +6,8 @@ import Login from "./pages/Login";
 import GlobalStyle from "./styles/GlobalStyle";
 import ToasterContainer from "./ui/ToasterContainer";
 import Signup from "./pages/Signup";
-import SetAvatar from "./features/chat/SetAvatar";
+import Users from "./features/chat/Users";
+import Chat from "./pages/Chat";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -19,7 +20,9 @@ const queryClient = new QueryClient({
 const router = createBrowserRouter([
   { path: "/", element: <Login /> },
   { path: "/signup", element: <Signup /> },
-  { path: "/s", element: <SetAvatar /> },
+  { path: "/s", element: <Users /> },
+  { path: "/chat", element: <Chat /> },
+  { path: "*", element: <div>Not Found</div> },
 ]);
 function App() {
   return (

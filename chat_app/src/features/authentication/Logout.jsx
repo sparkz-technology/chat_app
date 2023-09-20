@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import { BiPowerOff } from "react-icons/bi";
 
-import MiniSpinner from "../../components/MiniSpinner";
-import { useLogout } from "./useLogout";
+import MiniSpinner from "../../ui/MiniSpinner";
+import useLogout from "./useLogout";
 
 function Logout() {
   const { mutate, isLoading } = useLogout();
