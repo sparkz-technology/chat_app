@@ -2,7 +2,6 @@
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import Input from "./Input";
-import Logout from "../authentication/Logout";
 import { v4 as uuidv4 } from "uuid";
 import useSendMsg from "./useSendMsg";
 import useGetMsg from "./useGetMsg";
@@ -61,7 +60,6 @@ export default function ChatContainer({ currentChat, socket }) {
             <h3>{currentChat.username}</h3>
           </div>
         </div>
-        <Logout />
       </div>
       <div className="chat-messages">
         {messages.map((message) => {
@@ -90,6 +88,7 @@ const Container = styled.div`
   grid-template-rows: 10% 80% 10%;
   gap: 0.1rem;
   overflow: hidden;
+  box-shadow: 0 0 0.5rem #00000029;
   @media screen and (min-width: 720px) and (max-width: 1080px) {
     grid-template-rows: 15% 70% 15%;
   }
@@ -98,6 +97,9 @@ const Container = styled.div`
     justify-content: space-between;
     align-items: center;
     padding: 0 2rem;
+    background-color: #0d0c22;
+    box-shadow: 0 0 0.5rem #00000029;
+
     .user-details {
       display: flex;
       align-items: center;
@@ -134,10 +136,13 @@ const Container = styled.div`
       .content {
         max-width: 40%;
         overflow-wrap: break-word;
-        padding: 1rem;
-        font-size: 1.1rem;
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
         border-radius: 1rem;
         color: #d1d1d1;
+        p {
+          margin: 0;
+        }
         @media screen and (min-width: 720px) and (max-width: 1080px) {
           max-width: 70%;
         }
@@ -146,13 +151,14 @@ const Container = styled.div`
     .sended {
       justify-content: flex-end;
       .content {
-        background-color: #ffffff20;
+        color: #0d0c22;
+        background-color: #fff;
       }
     }
     .recieved {
       justify-content: flex-start;
       .content {
-        background-color: #ffffff20;
+        background-color: #0d0c22;
       }
     }
   }

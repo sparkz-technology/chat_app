@@ -1,7 +1,10 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { BsWechat } from "react-icons/bs";
+
 import useGetAllUser from "./useGetAllUser";
+import Logout from "../authentication/Logout";
 
 export default function Users({ changeChat }) {
   const [currentUserName, setCurrentUserName] = useState(null);
@@ -29,11 +32,7 @@ export default function Users({ changeChat }) {
       {currentUserImage && currentUserImage && (
         <Container>
           <div className="brand">
-            <img
-              src={"https://img.icons8.com/color/48/000000/chat.png"}
-              alt="logo"
-            />
-
+            <Logo />
             <h3>Chat App</h3>
           </div>
           <div className="contacts">
@@ -75,15 +74,21 @@ export default function Users({ changeChat }) {
             <div className="username">
               <h2>{currentUserName}</h2>
             </div>
+            <Logout />
           </div>
         </Container>
       )}
     </>
   );
 }
+
+const Logo = styled(BsWechat)`
+  height: 3rem;
+`;
+
 const Container = styled.div`
   display: grid;
-  grid-template-rows: 10% 75% 15%;
+  grid-template-rows: 10% 80% 15%;
   overflow: hidden;
   background-color: #f2efff;
   box-shadow: 0 0 0.5rem #00000029;
@@ -92,11 +97,9 @@ const Container = styled.div`
     align-items: center;
     gap: 1rem;
     justify-content: center;
-    img {
-      height: 2rem;
-    }
+
     h3 {
-      color: white;
+      color: #0d0c22;
       text-transform: uppercase;
     }
   }
@@ -116,7 +119,7 @@ const Container = styled.div`
     }
     .contact {
       background-color: #f9f7fc;
-      min-height: 5rem;
+      min-height: 2rem;
       cursor: pointer;
       width: 90%;
       border-radius: 0.2rem;
@@ -135,21 +138,27 @@ const Container = styled.div`
         h3 {
           color: #0d0c22;
         }
+        .selectedUsername {
+          color: white;
+          transition: 0.5s ease-in-out;
+        }
       }
     }
     .selected {
-      background-color: #9a86f3;
+      background-color: #0d0c22;
     }
   }
   .selectedUsername {
     color: white;
   }
   .current-user {
-    background-color: #0d0d30;
+    background-color: #0d0c22;
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 2rem;
+    height: 4rem;
+    position: relative;
     .avatar {
       img {
         height: 4rem;
@@ -158,6 +167,8 @@ const Container = styled.div`
     }
     .username {
       h2 {
+        margin: 0;
+
         color: white;
       }
     }

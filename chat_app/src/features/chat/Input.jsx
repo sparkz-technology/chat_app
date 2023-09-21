@@ -15,10 +15,10 @@ const InputContainer = styled.div`
 `;
 
 const EmojiButton = styled(BiWinkSmile)`
-  font-size: 3rem;
+  font-size: 2.5rem;
   cursor: pointer;
   margin-right: 10px;
-  color: #3498db;
+  color: #0d0c22;
 `;
 
 const InputForm = styled.form`
@@ -28,6 +28,7 @@ const InputForm = styled.form`
   border-radius: 25px;
   padding: 5px;
   align-items: center;
+  box-shadow: 0 0 0.5rem #00000029;
 `;
 
 const InputField = styled.input`
@@ -41,7 +42,7 @@ const InputField = styled.input`
 `;
 
 const SendButton = styled.button`
-  background-color: #3498db;
+  background-color: #0d0c22;
   color: #fff;
   border: none;
   border-radius: 50%;
@@ -54,7 +55,7 @@ const SendButton = styled.button`
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: #2980b9;
+    background-color: #141336;
   }
 `;
 
