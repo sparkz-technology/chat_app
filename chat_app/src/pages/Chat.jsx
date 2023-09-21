@@ -50,7 +50,7 @@ const Cont = styled.div`
   .container {
     height: 85vh;
     width: 85vw;
-    background-color: #00000076;
+    background-color: #f4f4fa;
     display: grid;
     grid-template-columns: 25% 75%;
     @media screen and (min-width: 720px) and (max-width: 1080px) {

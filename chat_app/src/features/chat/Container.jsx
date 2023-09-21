@@ -4,32 +4,28 @@ import styled from "styled-components";
 import Input from "./Input";
 import Logout from "../authentication/Logout";
 import { v4 as uuidv4 } from "uuid";
-import axios from "axios";
+import useSendMsg from "./useSendMsg";
+import useGetMsg from "./useGetMsg";
 
 export default function ChatContainer({ currentChat, socket }) {
+  const UserId = localStorage.getItem("userId");
+
   const [messages, setMessages] = useState([]);
   const scrollRef = useRef();
   const [arrivalMessage, setArrivalMessage] = useState(null);
-
+  const { mutate: setMsg } = useSendMsg();
+  const { data: messagesData } = useGetMsg(UserId, currentChat);
+  useEffect(() => {
+    if (messagesData) setMessages(messagesData);
+  }, [messagesData]);
   const handleSendMsg = async (msg) => {
-    const data = {
-      _id: "60f7b4b3e6b6a40015f1b0a5",
-      username: "test",
-      avatarImage: "test",
-    };
     socket.current.emit("send-msg", {
       to: currentChat._id,
-      from: data._id,
+      from: UserId,
       msg,
     });
-    // const response =
-    const sendMessageRoute = "http://localhost:5000/api/messages";
-    await axios.post(sendMessageRoute + `/${currentChat._id}`, {
-      from: data._id,
-      to: currentChat._id,
-      message: msg,
-    });
-
+    const values = { from: UserId, to: currentChat._id, message: msg };
+    setMsg(values);
     const msgs = [...messages];
     msgs.push({ fromSelf: true, message: msg });
     setMessages(msgs);
@@ -150,13 +146,13 @@ const Container = styled.div`
     .sended {
       justify-content: flex-end;
       .content {
-        background-color: #4f04ff21;
+        background-color: #ffffff20;
       }
     }
     .recieved {
       justify-content: flex-start;
       .content {
-        background-color: #9900ff20;
+        background-color: #ffffff20;
       }
     }
   }

@@ -1,12 +1,14 @@
 import User from "../models/user.js";
+import mongoose from "mongoose";
 export async function getAllUsers(req, res, next) {
   try {
     const { id } = req.params;
-    if (!id) {
+    if (!id || !mongoose.isValidObjectId(id)) {
       const error = new Error("User id is required");
       error.statusCode = 422;
       throw error;
     }
+
     const users = await User.find({ _id: { $ne: id } }).select([
       "email",
       "username",

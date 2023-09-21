@@ -36,7 +36,7 @@ export async function addMessage(req, res, next) {
       error.statusCode = 422;
       throw error;
     }
-    const data = await Messages.create({
+    const data = await Message.create({
       message: { text: message },
       users: [from, to],
       sender: from,

@@ -3,6 +3,7 @@ import { BiWinkSmile } from "react-icons/bi";
 import { IoMdSend } from "react-icons/io";
 import Picker from "emoji-picker-react";
 import styled from "styled-components";
+import toast from "react-hot-toast";
 
 const InputContainer = styled.div`
   display: flex;
@@ -64,15 +65,23 @@ const EmojiPickerContainer = styled.div`
   z-index: 1;
 `;
 
-function Input() {
+import PropTypes from "prop-types";
+
+function Input({ handleSendMsg }) {
+  Input.propTypes = {
+    handleSendMsg: PropTypes.func.isRequired,
+  };
+
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [message, setMessage] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const trimmedMessage = message.trim();
+    if (trimmedMessage === "") return toast.error("Message cannot be empty");
     if (trimmedMessage !== "") {
       console.log(trimmedMessage); // Simulate sending the message to a chat room
+      handleSendMsg(trimmedMessage);
       setMessage("");
     }
   };

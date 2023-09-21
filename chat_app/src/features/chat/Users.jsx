@@ -53,7 +53,13 @@ export default function Users({ changeChat }) {
                     />
                   </div>
                   <div className="username">
-                    <h3>{contact.username}</h3>
+                    <h3
+                      className={` ${
+                        index === currentSelected ? "selectedUsername" : ""
+                      }`}
+                    >
+                      {contact.username}
+                    </h3>
                   </div>
                 </div>
               );
@@ -79,7 +85,8 @@ const Container = styled.div`
   display: grid;
   grid-template-rows: 10% 75% 15%;
   overflow: hidden;
-  background-color: #080420;
+  background-color: #f2efff;
+  box-shadow: 0 0 0.5rem #00000029;
   .brand {
     display: flex;
     align-items: center;
@@ -102,13 +109,13 @@ const Container = styled.div`
     &::-webkit-scrollbar {
       width: 0.2rem;
       &-thumb {
-        background-color: #ffffff39;
+        background-color: #f7f7f7;
         width: 0.1rem;
         border-radius: 1rem;
       }
     }
     .contact {
-      background-color: #ffffff34;
+      background-color: #f9f7fc;
       min-height: 5rem;
       cursor: pointer;
       width: 90%;
@@ -118,6 +125,7 @@ const Container = styled.div`
       gap: 1rem;
       align-items: center;
       transition: 0.5s ease-in-out;
+      box-shadow: 0 0 0.5rem #00000029;
       .avatar {
         img {
           height: 3rem;
@@ -125,7 +133,7 @@ const Container = styled.div`
       }
       .username {
         h3 {
-          color: white;
+          color: #0d0c22;
         }
       }
     }
@@ -133,7 +141,9 @@ const Container = styled.div`
       background-color: #9a86f3;
     }
   }
-
+  .selectedUsername {
+    color: white;
+  }
   .current-user {
     background-color: #0d0d30;
     display: flex;
