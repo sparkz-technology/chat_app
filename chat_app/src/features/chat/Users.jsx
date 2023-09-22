@@ -23,7 +23,32 @@ export default function Users({ changeChat }) {
   const { data: contacts } = useGetAllUser();
 
   if (!contacts) {
-    return <div>Error: Unable to load contacts.</div>;
+    return (
+      <Container>
+        <div className="brand">
+          <Logo />
+          <h3>Chat App</h3>
+        </div>
+        <div className="contacts">
+          <div className="contact">
+            <div className="avatar">
+              <Avatar name="loading" size="40" round={true} />
+            </div>
+            <div className="username">
+              <h3>loading</h3>
+            </div>
+          </div>
+        </div>
+        <div className="current-user">
+          <div className="avatar">
+            <Avatar name="loading" size="40" round={true} />
+          </div>
+          <div className="username">
+            <h2>loading</h2>
+          </div>
+        </div>
+      </Container>
+    )
   }
   return (
     <>
