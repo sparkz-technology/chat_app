@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { BsWechat } from "react-icons/bs";
+import Avatar from 'react-avatar';
 
 import useGetAllUser from "./useGetAllUser";
 import Logout from "../authentication/Logout";
@@ -11,12 +12,9 @@ export default function Users({ changeChat }) {
   const [currentUserImage, setCurrentUserImage] = useState(null);
   const [currentSelected, setCurrentSelected] = useState(undefined);
   useEffect(() => {
-    const data = {
-      username: "test",
-      avatarImage: "https://img.icons8.com/color/48/000000/chat.png",
-    };
+    const data = JSON.parse(localStorage.getItem("user"));
     setCurrentUserName(data.username);
-    setCurrentUserImage(data.avatarImage);
+    setCurrentUserImage(data.avatarImage || data.username);
   }, []);
   const changeCurrentChat = (index, contact) => {
     setCurrentSelected(index);
@@ -40,22 +38,17 @@ export default function Users({ changeChat }) {
               return (
                 <div
                   key={contact._id}
-                  className={`contact ${
-                    index === currentSelected ? "selected" : ""
-                  }`}
+                  className={`contact ${index === currentSelected ? "selected" : ""
+                    }`}
                   onClick={() => changeCurrentChat(index, contact)}
                 >
                   <div className="avatar">
-                    <img
-                      src={`data:image/svg+xml;base64,${contact.avatarImage}`}
-                      alt=""
-                    />
+                    <Avatar name={contact.username} size="40" round={true} src={contact.avatarImage} />
                   </div>
                   <div className="username">
                     <h3
-                      className={` ${
-                        index === currentSelected ? "selectedUsername" : ""
-                      }`}
+                      className={` ${index === currentSelected ? "selectedUsername" : ""
+                        }`}
                     >
                       {contact.username}
                     </h3>
@@ -66,10 +59,8 @@ export default function Users({ changeChat }) {
           </div>
           <div className="current-user">
             <div className="avatar">
-              <img
-                src={`data:image/svg+xml;base64,${currentUserImage}`}
-                alt="avatar"
-              />
+              <Avatar name={currentUserName} size="40" round={true} src={currentUserImage} />
+
             </div>
             <div className="username">
               <h2>{currentUserName}</h2>
@@ -88,7 +79,7 @@ const Logo = styled(BsWechat)`
 
 const Container = styled.div`
   display: grid;
-  grid-template-rows: 10% 80% 15%;
+  grid-template-rows: 10% 79% 15%;
   overflow: hidden;
   background-color: #f2efff;
   box-shadow: 0 0 0.5rem #00000029;
@@ -97,6 +88,8 @@ const Container = styled.div`
     align-items: center;
     gap: 1rem;
     justify-content: center;
+    padding: 0.5rem;
+    box-shadow: 0 0 0.5rem #00000029;
 
     h3 {
       color: #0d0c22;
@@ -135,6 +128,7 @@ const Container = styled.div`
         }
       }
       .username {
+        box-sizing: border-box;
         h3 {
           color: #0d0c22;
         }
@@ -154,10 +148,11 @@ const Container = styled.div`
   .current-user {
     background-color: #0d0c22;
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     gap: 2rem;
     height: 4rem;
+    padding: 0 1rem;
     position: relative;
     .avatar {
       img {

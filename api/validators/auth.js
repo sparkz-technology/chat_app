@@ -19,6 +19,8 @@ export const signupValidator = [
     .trim()
     .not()
     .isEmpty()
+    .isLength({ max: 6 })
+    .withMessage("Username must be at least 6 characters long.")
     .custom(isFieldUnique("username", "Username already exists!")),
   body("email")
     .isEmail()

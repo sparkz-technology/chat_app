@@ -20,7 +20,7 @@ const SignUpForm = () => {
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Required"),
-      username: Yup.string().required("Required"),
+      username: Yup.string().required("Required").max(6, "Max 6 characters"),
       email: Yup.string().email("Invalid email address").required("Required"),
       password: Yup.string()
         .required("Password is required")
@@ -76,6 +76,9 @@ const SignUpForm = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.username}
+              maxLength="6"
+              fontSize="1.2rem"
+
             />
             {formik.touched.username && formik.errors.username ? (
               <Error>{formik.errors.username}</Error>
@@ -123,7 +126,7 @@ const SignUpForm = () => {
           {isLoading ? <MiniSpinner /> : "Create Account"}
         </Button>
       </FormWrapper>
-      <StyledLink to="/" style={{ marginTop: "20px" }}>
+      <StyledLink to="/login" style={{ marginTop: "20px" }}>
         Already have an account? Login
       </StyledLink>
     </Container>
@@ -150,7 +153,7 @@ const Container = styles.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 500px;
+  max-width: 400px;
   margin: 0 auto;
   padding: 1rem;
   position: absolute;

@@ -5,9 +5,10 @@ import Input from "./Input";
 import { v4 as uuidv4 } from "uuid";
 import useSendMsg from "./useSendMsg";
 import useGetMsg from "./useGetMsg";
+import Avatar from "react-avatar";
 
 export default function ChatContainer({ currentChat, socket }) {
-  const UserId = localStorage.getItem("userId");
+  const UserId = localStorage.getItem("userId")
 
   const [messages, setMessages] = useState([]);
   const scrollRef = useRef();
@@ -51,10 +52,12 @@ export default function ChatContainer({ currentChat, socket }) {
       <div className="chat-header">
         <div className="user-details">
           <div className="avatar">
-            <img
+            {/* <img
               src={`data:image/svg+xml;base64,${currentChat.avatarImage}`}
               alt=""
-            />
+            /> */}
+            <Avatar name={currentChat.username} size="40" round={true} src={currentChat.avatarImage} />
+
           </div>
           <div className="username">
             <h3>{currentChat.username}</h3>
@@ -66,9 +69,8 @@ export default function ChatContainer({ currentChat, socket }) {
           return (
             <div ref={scrollRef} key={uuidv4()}>
               <div
-                className={`message ${
-                  message.fromSelf ? "sended" : "recieved"
-                }`}
+                className={`message ${message.fromSelf ? "sended" : "recieved"
+                  }`}
               >
                 <div className="content ">
                   <p>{message.message}</p>

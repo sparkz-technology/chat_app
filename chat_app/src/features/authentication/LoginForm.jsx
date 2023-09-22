@@ -88,7 +88,7 @@ const Container = styles.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 500px;
+  max-width: 400px;
   margin: 0 auto;
   padding: 1rem;
   position: absolute;

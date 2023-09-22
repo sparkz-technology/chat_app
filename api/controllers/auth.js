@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { validationResult } from "express-validator";
 
+import { onlineUsers } from "../socket.js";
 import User from "../models/user.js";
 import config from "../config.js";
 const { JWT_EXPIRE, JWT_SECRET } = config;
@@ -67,13 +68,16 @@ export async function postLogin(req, res, next) {
       JWT_SECRET,
       { expiresIn: JWT_EXPIRE }
     );
-    res.status(200).json({ token, userId: loadedUser._id.toString() });
+    delete loadedUser.password;
+    onlineUsers.set(loadedUser._id.toString(), loadedUser);
+    res
+      .status(200)
+      .json({ token, user: loadedUser, userId: loadedUser._id.toString() });
   } catch (err) {
     if (!err.statusCode) err.statusCode = 500;
     next(err);
   }
 }
-
 export async function logOut(req, res, next) {
   try {
     const { id } = req.params;
@@ -82,8 +86,13 @@ export async function logOut(req, res, next) {
       error.statusCode = 422;
       throw error;
     }
-    onlineUsers.delete(req.params.id);
-    return res.status(200).send();
+    if (onlineUsers.has(id)) {
+      onlineUsers.delete(id);
+    } else {
+      return res.status(404).json({ message: "User is already logged out" });
+    }
+    console.log(`User ${id} logged out at ${new Date().toISOString()}`);
+    return res.status(200).json({ message: "Logout successful" });
   } catch (error) {
     if (!error.statusCode) error.statusCode = 500;
     next(error);

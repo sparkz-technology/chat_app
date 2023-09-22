@@ -1,4 +1,5 @@
 import { Server } from "socket.io";
+export const onlineUsers = new Map(); //! Map to store the user's socket ID
 
 export function setupSocket(server, origin) {
   const io = new Server(server, {
@@ -8,8 +9,6 @@ export function setupSocket(server, origin) {
       credentials: true,
     },
   });
-
-  const onlineUsers = new Map(); //! Map to store the user's socket ID
 
   io.on("connection", (socket) => {
     console.log("a user connected");

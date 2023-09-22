@@ -11,11 +11,12 @@ export default function useLogin() {
     onSuccess: (data) => {
       toast.success("Login successful");
       localStorage.setItem("token", data.token);
-      localStorage.setItem("userId", data.userId);
-      navigate("/chat");
+      localStorage.setItem("userId", data.user._id);
+      localStorage.setItem("user", JSON.stringify(data.user));
+      navigate("/");
     },
     onError: (error) => {
-      toast.error(error.message);
+      toast.error(error.response.data.message || "Login failed");
     },
   });
   return { mutate, isLoading };
