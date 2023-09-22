@@ -16,6 +16,8 @@ export function setupSocket(server, origin) {
     socket.on("add-user", (userId) => {
       onlineUsers.set(userId, socket.id); //! Add the user to the map with the socket ID
       console.log(onlineUsers);
+      io.emit("online-users", [...onlineUsers.keys()]); //! Send the list of online users to all the users
+      io.emit("is-online", userId);
     });
 
     socket.on("send-msg", (data) => {
@@ -23,6 +25,16 @@ export function setupSocket(server, origin) {
       if (sendUserSocket) {
         io.to(sendUserSocket).emit("msg-recieve", data.msg); //! Use io.to() to send the message to the specific user
       }
+    });
+    socket.on("disconnect", () => {
+      console.log("user disconnected");
+      onlineUsers.forEach((value, key) => {
+        if (value === socket.id) {
+          onlineUsers.delete(key);
+          io.emit("online-users", [...onlineUsers.keys()]);
+          io.emit("is-offline", key); //! Emit the "is-offline" event when a user disconnects.
+        }
+      });
     });
 
     io.use((socket, next) => {

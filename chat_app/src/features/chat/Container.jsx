@@ -11,6 +11,7 @@ export default function ChatContainer({ currentChat, socket }) {
   const UserId = localStorage.getItem("userId")
 
   const [messages, setMessages] = useState([]);
+  const [isOnline, setIsOnline] = useState(false)
   const scrollRef = useRef();
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const { mutate: setMsg } = useSendMsg();
@@ -47,6 +48,22 @@ export default function ChatContainer({ currentChat, socket }) {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  useEffect(() => {
+    socket.current.on("is-online", (data) => {
+      if (data === currentChat._id) {
+        setIsOnline(true);
+      }
+    });
+
+    socket.current.on("is-offline", (data) => {
+      if (data === currentChat._id) {
+        setIsOnline(false);
+      }
+    });
+
+  }, [socket, currentChat._id]);
+
+
   return (
     <Container>
       <div className="chat-header">
@@ -57,6 +74,7 @@ export default function ChatContainer({ currentChat, socket }) {
           <div className="username">
             <h3>{currentChat.username}</h3>
           </div>
+          {isOnline ? <p>Online</p> : <p>Offline</p>}
         </div>
       </div>
       <div className="chat-messages">
