@@ -67,6 +67,7 @@ const EmojiPickerContainer = styled.div`
 `;
 
 import PropTypes from "prop-types";
+import { useOutsideClick } from "../../hooks/useOutsideClick";
 
 function Input({ handleSendMsg }) {
   Input.propTypes = {
@@ -75,6 +76,10 @@ function Input({ handleSendMsg }) {
 
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [message, setMessage] = useState("");
+
+  const emojiPickerRef = useOutsideClick(() => {
+    setShowEmojiPicker(false);
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -92,7 +97,7 @@ function Input({ handleSendMsg }) {
       <InputContainer>
         <EmojiButton onClick={() => setShowEmojiPicker(!showEmojiPicker)} />
         {showEmojiPicker && (
-          <EmojiPickerContainer>
+          <EmojiPickerContainer ref={emojiPickerRef}>
             <Picker
               onEmojiClick={(emoji) =>
                 setMessage((prevMessage) => prevMessage + emoji.emoji)
@@ -109,6 +114,7 @@ function Input({ handleSendMsg }) {
             onChange={(e) => setMessage(e.target.value)}
             placeholder="Type a message..."
             autoFocus={true}
+            autoComplete="off"
           />
           <SendButton type="submit">
             <IoMdSend />

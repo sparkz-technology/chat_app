@@ -52,12 +52,7 @@ export default function ChatContainer({ currentChat, socket }) {
       <div className="chat-header">
         <div className="user-details">
           <div className="avatar">
-            {/* <img
-              src={`data:image/svg+xml;base64,${currentChat.avatarImage}`}
-              alt=""
-            /> */}
             <Avatar name={currentChat.username} size="40" round={true} src={currentChat.avatarImage} />
-
           </div>
           <div className="username">
             <h3>{currentChat.username}</h3>
@@ -91,6 +86,8 @@ const Container = styled.div`
   gap: 0.1rem;
   overflow: hidden;
   box-shadow: 0 0 0.5rem #00000029;
+    border-radius:0 1rem 1rem 0;
+
   @media screen and (min-width: 720px) and (max-width: 1080px) {
     grid-template-rows: 15% 70% 15%;
   }
@@ -106,6 +103,7 @@ const Container = styled.div`
       display: flex;
       align-items: center;
       gap: 1rem;
+      padding: 1rem 0;
       .avatar {
         img {
           height: 3rem;

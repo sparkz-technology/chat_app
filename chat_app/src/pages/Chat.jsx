@@ -3,6 +3,7 @@ import { io } from "socket.io-client";
 import styled from "styled-components";
 import Users from "../features/chat/Users";
 import Container from "../features/chat/Container";
+import Welcome from "../features/chat/Welcome";
 
 export default function Chat() {
   const socket = useRef();
@@ -28,7 +29,7 @@ export default function Chat() {
         <div className="container">
           <Users changeChat={handleChatChange} />
           {currentChat === undefined ? (
-            <h1>Welcome to Chat App</h1>
+            <Welcome />
           ) : (
             <Container currentChat={currentChat} socket={socket} />
           )}
@@ -46,8 +47,14 @@ const Cont = styled.div`
   justify-content: center;
   gap: 1rem;
   align-items: center;
+  background-image: linear-gradient(
+  45deg,
+  hsl(240deg 100% 20%) 0%,
+  hsl(346deg 83% 51%) 100%,
+  hsl(55deg 100% 50%) 100%
+);
 
-  /* background-color: #131324; */
+
 
   .container {
     height: 85vh;
@@ -56,6 +63,7 @@ const Cont = styled.div`
     display: grid;
     grid-template-columns: 25% 75%;
     box-shadow: 0.5rem 0.5rem 0.5rem #00000029;
+    border-radius: 1rem;
 
     @media screen and (min-width: 720px) and (max-width: 1080px) {
       grid-template-columns: 35% 65%;
