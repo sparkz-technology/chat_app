@@ -81,20 +81,26 @@ export async function postLogin(req, res, next) {
 export async function logOut(req, res, next) {
   try {
     const { id } = req.params;
+
+    // Validate id
     if (!id) {
-      const error = new Error("User id is required");
-      error.statusCode = 422;
+      const error = new Error("Invalid user id");
+      error.statusCode = 400; // Bad Request
       throw error;
     }
+
+    // Check if user is online and remove them
     if (onlineUsers.has(id)) {
       onlineUsers.delete(id);
-    } else {
-      return res.status(404).json({ message: "User is already logged out" });
     }
-    console.log(`User ${id} logged out at ${new Date().toISOString()}`);
-    return res.status(200).json({ message: "Logout successful" });
+
+    // Respond with a success message
+    res.status(200).json({ message: "Logout successful" });
   } catch (error) {
-    if (!error.statusCode) error.statusCode = 500;
+    // Handle errors
+    if (!error.statusCode) {
+      error.statusCode = 500; // Internal Server Error
+    }
     next(error);
   }
 }

@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import useSendMsg from "./useSendMsg";
 import useGetMsg from "./useGetMsg";
 import Avatar from "react-avatar";
+import toast from "react-hot-toast";
 
 export default function ChatContainer({ currentChat, socket }) {
   const UserId = localStorage.getItem("userId")
@@ -49,19 +50,20 @@ export default function ChatContainer({ currentChat, socket }) {
   }, [messages]);
 
   useEffect(() => {
-    socket.current.on("is-online", (data) => {
-      if (data === currentChat._id) {
-        setIsOnline(true);
-      }
-    });
+    if (socket.current) {
+      socket.current.emit("check-online", currentChat._id);
+      socket.current.on("is-online", (data) => {
+        setIsOnline(data);
+      });
 
-    socket.current.on("is-offline", (data) => {
-      if (data === currentChat._id) {
-        setIsOnline(false);
-      }
-    });
+      socket.current.on("is-offline", () => {
+        setIsOnline(false); // Set the user as offline
+        toast.error(`${currentChat.username} is offline`);
+      });
+    }
+  }, [socket, currentChat._id, currentChat.username]);
 
-  }, [socket, currentChat._id]);
+
 
 
   return (
@@ -74,7 +76,9 @@ export default function ChatContainer({ currentChat, socket }) {
           <div className="username">
             <h3>{currentChat.username}</h3>
           </div>
-          {isOnline ? <p>Online</p> : <p>Offline</p>}
+          <p style={{ color: isOnline ? "green" : "red" }}>
+            {isOnline ? "Online" : "Offline"}
+          </p>
         </div>
       </div>
       <div className="chat-messages">

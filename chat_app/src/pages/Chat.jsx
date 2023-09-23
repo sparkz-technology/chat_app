@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { io } from "socket.io-client";
 import styled from "styled-components";
+
 import Users from "../features/chat/Users";
 import Container from "../features/chat/Container";
 import Welcome from "../features/chat/Welcome";
@@ -11,14 +12,28 @@ export default function Chat() {
 
   const host = "http://localhost:8000";
 
+  const currentUserId = localStorage.getItem("userId");
   useEffect(() => {
-    const currentUserId = localStorage.getItem("userId");
-
     if (currentUserId) {
       socket.current = io(host);
-      socket.current.emit("add-user", currentUserId);
+      if (socket.current) {
+        socket.current.on("connect", () => {
+          socket.current.emit("add-user", currentUserId);
+        });
+        // Handle connection errors
+        socket.current.on("connect_error", (error) => {
+          console.log("Socket connection error:", error);
+        });
+      }
     }
-  }, []);
+    return () => {
+      socket.current?.disconnect();
+    }
+
+  }, [currentUserId]);
+
+
+
 
   const handleChatChange = (chat) => {
     setCurrentChat(chat);
