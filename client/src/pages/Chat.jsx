@@ -5,6 +5,7 @@ import styled from "styled-components";
 import Users from "../features/chat/Users";
 import Container from "../features/chat/Container";
 import Welcome from "../features/chat/Welcome";
+import Settings from "../features/authentication/Settings";
 
 export default function Chat() {
   const socket = useRef();
@@ -43,7 +44,8 @@ export default function Chat() {
         <div className="container">
           <Users changeChat={handleChatChange} />
           {currentChat === undefined ? (
-            <Welcome />
+            // <Welcome />
+            <Settings />
           ) : (
             <Container currentChat={currentChat} socket={socket} />
           )}
