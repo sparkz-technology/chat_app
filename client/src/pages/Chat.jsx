@@ -28,12 +28,11 @@ export default function Chat() {
     }
     return () => {
       socket.current?.disconnect();
+      socket.current?.off();
+
     }
 
   }, [currentUserId]);
-
-
-
 
   const handleChatChange = (chat) => {
     setCurrentChat(chat);

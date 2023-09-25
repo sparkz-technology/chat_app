@@ -89,11 +89,6 @@ export async function logOut(req, res, next) {
       throw error;
     }
 
-    // Check if user is online and remove them
-    if (onlineUsers.has(id)) {
-      onlineUsers.delete(id);
-    }
-
     // Respond with a success message
     res.status(200).json({ message: "Logout successful" });
   } catch (error) {

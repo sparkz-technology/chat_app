@@ -1,25 +1,30 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import Input from "./Input";
 import { v4 as uuidv4 } from "uuid";
-import useSendMsg from "./useSendMsg";
-import useGetMsg from "./useGetMsg";
 import Avatar from "react-avatar";
+
+import useGetMsg from "./useGetMsg";
+import useSendMsg from "./useSendMsg";
+import Input from "./Input";
 import toast from "react-hot-toast";
 
+// eslint-disable-next-line react/prop-types
 export default function ChatContainer({ currentChat, socket }) {
-  const UserId = localStorage.getItem("userId")
+  const UserId = localStorage.getItem("userId");
 
   const [messages, setMessages] = useState([]);
-  const [isOnline, setIsOnline] = useState(false)
-  const scrollRef = useRef();
+  const [isOnline, setIsOnline] = useState(false);
   const [arrivalMessage, setArrivalMessage] = useState(null);
+
+  const scrollRef = useRef();
   const { mutate: setMsg } = useSendMsg();
   const { data: messagesData } = useGetMsg(UserId, currentChat);
+
   useEffect(() => {
     if (messagesData) setMessages(messagesData);
   }, [messagesData]);
+
   const handleSendMsg = async (msg) => {
     socket.current.emit("send-msg", {
       to: currentChat._id,
@@ -35,11 +40,21 @@ export default function ChatContainer({ currentChat, socket }) {
 
   useEffect(() => {
     if (socket.current) {
-      socket.current.on("msg-recieve", (msg) => {
+      const currentSocket = socket.current;
+
+      currentSocket.on("msg-receive", (msg) => {
         setArrivalMessage({ fromSelf: false, message: msg });
       });
+
+
+
+
+      return () => {
+        currentSocket.off("msg-receive");
+        currentSocket.off("check-online");
+      };
     }
-  }, [socket]);
+  }, [socket, currentChat]);
 
   useEffect(() => {
     arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
@@ -50,57 +65,59 @@ export default function ChatContainer({ currentChat, socket }) {
   }, [messages]);
 
   useEffect(() => {
-    if (socket.current) {
-      socket.current.emit("check-online", currentChat._id);
-      socket.current.on("is-online", (data) => {
-        setIsOnline(data);
-      });
+    socket.current?.emit("check-online", currentChat?._id);
+    toast.error(currentChat?.username + " is offline");
 
-      socket.current.on("is-offline", () => {
-        setIsOnline(false); // Set the user as offline
-        toast.error(`${currentChat.username} is offline`);
+  }, [currentChat, socket]);
+
+  useEffect(() => {
+    if (socket.current) {
+      socket.current.on("is-online", () => {
+        setIsOnline(true);
+      });
+      socket.current.on("is-offline", (data) => {
+        toast.error(currentChat?.username + " is offline");
+        if (data === currentChat?._id)
+          setIsOnline(false);
       });
     }
-  }, [socket, currentChat._id, currentChat.username]);
-
-
-
+  }, [socket, currentChat]);
 
   return (
     <Container>
       <div className="chat-header">
         <div className="user-details">
           <div className="avatar">
-            <Avatar name={currentChat.username} size="40" round={true} src={currentChat.avatarImage} />
+            <Avatar name={currentChat?.username} size="40" round={true} src={currentChat?.avatarImage} />
           </div>
           <div className="username">
-            <h3>{currentChat.username}</h3>
+            <h3>{currentChat?.username}</h3>
           </div>
           <p style={{ color: isOnline ? "green" : "red" }}>
             {isOnline ? "Online" : "Offline"}
           </p>
         </div>
       </div>
-      <div className="chat-messages">
-        {messages.map((message) => {
-          return (
-            <div ref={scrollRef} key={uuidv4()}>
-              <div
-                className={`message ${message.fromSelf ? "sended" : "recieved"
-                  }`}
-              >
-                <div className="content ">
-                  <p>{message.message}</p>
-                </div>
+      <div className="chat-messages" ref={scrollRef}>
+        {messages.map((message) => (
+          <div key={uuidv4()}>
+            <div
+              className={`message ${message.fromSelf ? "sended" : "received"}`}
+            >
+              <div className="content">
+                <p>{message.message}</p>
               </div>
             </div>
-          );
-        })}
+          </div>
+        ))}
       </div>
       <Input handleSendMsg={handleSendMsg} />
     </Container>
   );
 }
+
+
+
 
 const Container = styled.div`
   display: grid;
@@ -177,10 +194,11 @@ const Container = styled.div`
         background-color: #fff;
       }
     }
-    .recieved {
+    .received {
       justify-content: flex-start;
       .content {
         background-color: #0d0c22;
+        color: #fff;
       }
     }
   }
