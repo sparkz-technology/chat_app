@@ -66,6 +66,20 @@ export const setupSocket = (server, origin) => {
         : io.emit("is-offline", userId);
     });
 
+    socket.on("typing", (data) => {
+      const sendUserSocket = onlineUsers.get(data.to);
+      if (sendUserSocket) {
+        io.to(sendUserSocket).emit("typing", data);
+      }
+    });
+
+    socket.on("stop-typing", (data) => {
+      const sendUserSocket = onlineUsers.get(data.to);
+      if (sendUserSocket) {
+        io.to(sendUserSocket).emit("stop-typing", data);
+      }
+    });
+
     socket.on("disconnect", () => {
       // Find the user ID associated with this socket and remove it from onlineUsers
       const userId = socket.userId;

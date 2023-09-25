@@ -210,6 +210,7 @@ function Users({ changeChat }) {
         <div className="username">
           <h2>{currentUserName}</h2>
         </div>
+
         <Logout />
       </CurrentUser>
     </Container>

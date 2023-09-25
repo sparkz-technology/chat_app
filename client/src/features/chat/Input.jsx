@@ -66,16 +66,22 @@ const EmojiPickerContainer = styled.div`
   z-index: 1;
 `;
 
-import PropTypes from "prop-types";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
+import { useDispatch, useSelector } from "react-redux";
 
+import PropTypes from "prop-types";
+import { setMessage } from "./ChatSlice";
+Input.propTypes = {
+  handleSendMsg: PropTypes.func.isRequired,
+};
 function Input({ handleSendMsg }) {
-  Input.propTypes = {
-    handleSendMsg: PropTypes.func.isRequired,
-  };
 
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
+  const message = useSelector((state) => state.chat.message);
+  const dispatch = useDispatch();
+
+
 
   const emojiPickerRef = useOutsideClick(() => {
     setShowEmojiPicker(false);
@@ -88,7 +94,8 @@ function Input({ handleSendMsg }) {
     if (trimmedMessage !== "") {
       console.log(trimmedMessage); // Simulate sending the message to a chat room
       handleSendMsg(trimmedMessage);
-      setMessage("");
+      dispatch(setMessage(""));
+
     }
   };
 
@@ -100,7 +107,7 @@ function Input({ handleSendMsg }) {
           <EmojiPickerContainer ref={emojiPickerRef}>
             <Picker
               onEmojiClick={(emoji) =>
-                setMessage((prevMessage) => prevMessage + emoji.emoji)
+                dispatch(setMessage(message + emoji.emoji))
               }
             />
           </EmojiPickerContainer>
@@ -111,7 +118,7 @@ function Input({ handleSendMsg }) {
             type="text"
             name="message"
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={(e) => dispatch(setMessage(e.target.value))}
             placeholder="Type a message..."
             autoFocus={true}
             autoComplete="off"

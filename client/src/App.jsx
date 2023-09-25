@@ -1,7 +1,9 @@
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Provider } from "react-redux";
 
+import store from "./store";
 import Login from "./pages/Login";
 import GlobalStyle from "./styles/GlobalStyle";
 import ToasterContainer from "./ui/ToasterContainer";
@@ -29,11 +31,14 @@ const router = createBrowserRouter([
 ]);
 function App() {
   return (
+
     <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
-      <GlobalStyle />
-      <RouterProvider router={router}></RouterProvider>
-      <ToasterContainer />
+      <Provider store={store}>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <GlobalStyle />
+        <RouterProvider router={router}></RouterProvider>
+        <ToasterContainer />
+      </Provider>
     </QueryClientProvider>
   );
 }

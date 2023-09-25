@@ -8,6 +8,8 @@ import useGetMsg from "./useGetMsg";
 import useSendMsg from "./useSendMsg";
 import Input from "./Input";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import TypingLoader from "../../ui/TypingLoader";
 
 // eslint-disable-next-line react/prop-types
 export default function ChatContainer({ currentChat, socket }) {
@@ -15,6 +17,7 @@ export default function ChatContainer({ currentChat, socket }) {
 
   const [messages, setMessages] = useState([]);
   const [isOnline, setIsOnline] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const [arrivalMessage, setArrivalMessage] = useState(null);
 
   const scrollRef = useRef();
@@ -24,6 +27,39 @@ export default function ChatContainer({ currentChat, socket }) {
   useEffect(() => {
     if (messagesData) setMessages(messagesData);
   }, [messagesData]);
+
+  // for typing
+  const typingMsg = useSelector((state) => state.chat.message);
+  useEffect(() => {
+    if (typingMsg !== "") {
+      socket.current.emit("typing", {
+        to: currentChat._id,
+        from: UserId,
+      });
+    }
+    socket.current.on("typing", (data) => {
+      if (data.from === currentChat._id) {
+        setIsTyping(true);
+      }
+    }
+    );
+  }, [typingMsg, currentChat, socket, UserId]);
+
+  useEffect(() => {
+    if (typingMsg === "") {
+      socket.current?.emit("stop-typing", {
+        to: currentChat._id,
+        from: UserId,
+      });
+    }
+    socket.current?.on("stop-typing", (data) => {
+      if (data.from === currentChat._id) {
+        setIsTyping(false);
+      }
+    });
+
+  }, [socket, currentChat, UserId, typingMsg]);
+
 
   const handleSendMsg = async (msg) => {
     socket.current.emit("send-msg", {
@@ -46,12 +82,8 @@ export default function ChatContainer({ currentChat, socket }) {
         setArrivalMessage({ fromSelf: false, message: msg });
       });
 
-
-
-
       return () => {
         currentSocket.off("msg-receive");
-        currentSocket.off("check-online");
       };
     }
   }, [socket, currentChat]);
@@ -62,15 +94,22 @@ export default function ChatContainer({ currentChat, socket }) {
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }
+    , [messages]);
 
   useEffect(() => {
+    const currentSocket = socket.current;
+
     socket.current?.emit("check-online", currentChat?._id);
     toast.error(currentChat?.username + " is offline");
+    return () => {
+      currentSocket?.emit("check-offline", currentChat?._id);
+    }
 
   }, [currentChat, socket]);
 
   useEffect(() => {
+    const currentSocket = socket.current;
     if (socket.current) {
       socket.current.on("is-online", () => {
         setIsOnline(true);
@@ -81,6 +120,11 @@ export default function ChatContainer({ currentChat, socket }) {
           setIsOnline(false);
       });
     }
+    return () => {
+      currentSocket?.off("is-online");
+      currentSocket?.off("is-offline");
+    }
+
   }, [socket, currentChat]);
 
   return (
@@ -98,9 +142,9 @@ export default function ChatContainer({ currentChat, socket }) {
           </p>
         </div>
       </div>
-      <div className="chat-messages" ref={scrollRef}>
+      <div className="chat-messages" >
         {messages.map((message) => (
-          <div key={uuidv4()}>
+          <div key={uuidv4()} ref={scrollRef}>
             <div
               className={`message ${message.fromSelf ? "sended" : "received"}`}
             >
@@ -111,15 +155,35 @@ export default function ChatContainer({ currentChat, socket }) {
           </div>
         ))}
       </div>
+      <Typing> {isTyping ? (<><p>typing</p>  < TypingLoader /> </>) : ""}</Typing>
       <Input handleSendMsg={handleSendMsg} />
     </Container>
   );
 }
 
+const Typing = styled.div`
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  bottom: 55px;
+  left: 10px;
+  z-index: 1;
+  font-size: 0.8rem;
+  height: fit-content;
+  p {
+  font-weight: bolder;
+    margin: 0;
+  }
+
+
+`;
+
 
 
 
 const Container = styled.div`
+position  : relative;
   display: grid;
   grid-template-rows: 10% 80% 10%;
   gap: 0.1rem;
