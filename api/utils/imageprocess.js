@@ -17,9 +17,13 @@ const createImagesDirectory = () => {
 export const uploadImage = async (req, res, next) => {
   const busboy = Busboy({ headers: req.headers });
   //   if no file is uploaded, the request will be passed to the next middleware
-  if (!req.headers["content-type"].includes("multipart/form-data")) {
+  if (
+    !req.headers["content-type"] ||
+    !req.headers["content-type"].startsWith("multipart/form-data")
+  ) {
     return next();
   }
+
   busboy.on("file", async (fieldname, file, filename, encoding, mimetype) => {
     try {
       if (mimetype !== "image/jpeg" && mimetype !== "image/png") {

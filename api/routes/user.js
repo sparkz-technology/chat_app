@@ -6,6 +6,6 @@ import { getAllUsers, editUser } from "../controllers/user.js";
 import { uploadImage } from "../utils/imageprocess.js";
 
 router.get("/all/:id", getAllUsers);
-router.patch("/edit/:id", editUserValidator, editUser);
+router.patch("/edit/:id", uploadImage, editUserValidator, editUser);
 
 export default router;
