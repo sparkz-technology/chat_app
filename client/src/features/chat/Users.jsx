@@ -6,7 +6,7 @@ import Avatar from 'react-avatar';
 import { AiFillSetting } from "react-icons/ai"
 import { FaEllipsisV } from "react-icons/fa";
 
-
+import { API_URL } from "../../utils/Constant";
 import Logout from "../authentication/Logout";
 import Settings from "../authentication/Settings";
 import useGetAllUser from "./useGetAllUser";
@@ -84,7 +84,7 @@ function Users() {
                 onClick={() => changeCurrentChat(index, contact)}
               >
                 <div className="avatar">
-                  <Avatar name={contact.username} size="40" round={true} src={contact.avatarImage} />
+                  <Avatar name={contact.username} size="40" round={true} src={API_URL + contact.avatarImage} />
                 </div>
                 <div className={`username ${index === currentSelected ? "selectedUsername" : ""}`}>
                   <h3>{contact.username}</h3>
@@ -94,7 +94,7 @@ function Users() {
           </Contacts>
           <CurrentUser>
             <div className="avatar">
-              <Avatar name={currentUserName} size="40" round={true} src={currentUserImage} />
+              <Avatar name={currentUserName} size="40" round={true} src={API_URL + currentUserImage} />
               <div className="username">
                 <h2>{currentUserName}</h2>
               </div>

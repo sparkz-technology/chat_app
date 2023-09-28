@@ -23,3 +23,15 @@ export async function GetMsg(values) {
   });
   return response.data;
 }
+
+export async function EditUser(values, userId) {
+  const responce = await axios.patch(`http://localhost:8000/user/edit/${userId}`, values,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+  return responce.data;
+}
+

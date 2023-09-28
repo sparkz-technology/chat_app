@@ -3,6 +3,8 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import morgan from "morgan";
 import fs from "fs";
+import path from "path";
+const __dirname = path.resolve();
 
 import config from "./config.js";
 import errorMiddleware from "./middlewares/error.js";
@@ -19,6 +21,7 @@ if (NODE_ENV === "development") {
 }
 
 app.use(morgan("combined", { stream: accessLogStream }));
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use(cors({}));
 app.use(bodyParser.json());

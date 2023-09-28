@@ -1,103 +1,176 @@
+import { useRef, useState } from 'react';
 import styled from 'styled-components';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 import { IoPersonOutline, IoMailOutline } from 'react-icons/io5';
 import { FaUser } from 'react-icons/fa';
 import Avatar from 'react-avatar';
-import { useRef, useState } from 'react';
 import { BsFillCameraFill } from 'react-icons/bs';
 import { useDispatch } from 'react-redux';
 import { setIsSettings } from '../chat/ChatSlice';
 import BackButton from '../../ui/BackButton';
+import useEditUser from './useEditUser';
+import MiniSpinner from '../../ui/MiniSpinner';
+import { API_URL } from '../../utils/Constant';
 
 function Settings() {
     const data = JSON.parse(localStorage.getItem('user'));
     const [isEditing, setIsEditing] = useState(false);
     const [image, setImage] = useState(null);
     const imageUploadRef = useRef(null);
+    const dispatch = useDispatch();
+
+    // Define a Yup validation schema
+    const validationSchema = Yup.object().shape({
+        username: Yup.string()
+            .min(3, 'Username must be at least 3 characters')
+            .required('Username is required'),
+        name: Yup.string().required('Name is required'),
+        email: Yup.string()
+            .email('Invalid email format')
+            .required('Email is required'),
+    });
+
+    const initialValues = {
+        username: data.username,
+        name: data.name,
+        email: data.email,
+    };
+
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = () => setImage(reader.result)
+        // const reader = new FileReader();
+        // reader.readAsDataURL(file);
+        // reader.onloadend = () => setImage(reader.result);
+        setImage(file);
+    };
+    const { mutate, isLoading } = useEditUser();
+    function handleEditProfile(values) {
+        const formData = new FormData();
+        formData.append('id', data._id);
+        if (values.username !== data.username) {
+            formData.append('username', values.username);
+        }
+        if (values.name !== data.name) {
+            formData.append('name', values.name);
+        }
+        if (values.email !== data.email) {
+            formData.append('email', values.email);
+        }
+        if (image) {
+            formData.append('file', image);
+        }
+        if (values.username === data.username && values.name === data.name && values.email === data.email && !image) {
+            return;
+        }
+        console.log(formData);
+        mutate(formData);
 
+
+        // dispatch(editUser(formData));
+        // dispatch(setIsSettings(false));
     }
-    const dispatch = useDispatch();
+
+
 
     return (
         <Container>
             <Header>
                 <BackButton onClick={() => dispatch(setIsSettings(false))} />
-
                 <h1>Settings</h1>
             </Header>
-            <AvatarContainer>
-                {
-                    image ? <Avatar name={data.name} size="150" round={true} src={image} /> :
-                        <Avatar name={data.name} size="150" round={true} src={data.avatarImage} />
-                }
-                {
-                    isEditing && <AvatarEditButton onClick={() => imageUploadRef.current.click()}>
-                        <BsFillCameraFill color="#fff" />
-                    </AvatarEditButton>
-                }
-                <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    ref={imageUploadRef}
-                    style={{ display: 'none' }} // Hide the input element
-                />
+            <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={handleEditProfile}
+            >
+                <Form>
+                    <AvatarContainer>
+                        <Avatar
+                            name={data.name}
+                            size="150"
+                            round={true}
+                            src={!image ? API_URL + data.avatarImage : URL.createObjectURL(image)}
+                        />
 
-
-            </AvatarContainer>
-            <Section>
-                <SectionItem>
-                    <IconWrapper>
-                        <IoPersonOutline size={24} color="#333" />
-                    </IconWrapper>
-                    <Data>
-                        <Label>Username:</Label>
-                        {isEditing ? <Input
-                            type="text"
-                            value={data.username}
-                        /> : <Value>{data.username}</Value>}
-                    </Data>
-                </SectionItem>
-                <SectionItem>
-                    <IconWrapper>
-                        <FaUser size={24} color="#333" />
-                    </IconWrapper>
-                    <Data>
-                        <Label>Name:</Label>
-                        {isEditing ? <Input
-                            type="text"
-                            value={data.name}
-                        /> : <Value>{data.name}</Value>}
-                    </Data>
-                </SectionItem>
-                <SectionItem>
-                    <IconWrapper>
-                        <IoMailOutline size={24} color="#333" />
-                    </IconWrapper>
-                    <Data>
-                        <Label>Email:</Label>
-                        {isEditing ? <Input
-                            type="email"
-                            value={data.email}
-                        /> : <Value>{data.email}</Value>}
-                    </Data>
-                </SectionItem>
-            </Section>
-            <ButtonSection>
-                <Button onClick={() => setIsEditing(!isEditing)}>{
-                    isEditing ? 'Cancel' : 'Edit Profile'}</Button>
-                {isEditing && <Button>Save</Button>}
-            </ButtonSection>
-
+                        {isEditing && (
+                            <AvatarEditButton onClick={() => imageUploadRef.current.click()}>
+                                <BsFillCameraFill color="#fff" />
+                            </AvatarEditButton>
+                        )}
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            ref={imageUploadRef}
+                            style={{ display: 'none' }} // Hide the input element
+                        />
+                    </AvatarContainer>
+                    <Section>
+                        <SectionItem>
+                            <IconWrapper>
+                                <IoPersonOutline size={24} color="#333" />
+                            </IconWrapper>
+                            <Data>
+                                <Label>Username:</Label>
+                                {isEditing ? (
+                                    <>
+                                        <FieldInput type="text" name="username" />
+                                        <ErrorMessage name="username" component={ErrorLabel} />
+                                    </>
+                                ) : (
+                                    <Value>{data.username}</Value>
+                                )}
+                            </Data>
+                        </SectionItem>
+                        <SectionItem>
+                            <IconWrapper>
+                                <FaUser size={24} color="#333" />
+                            </IconWrapper>
+                            <Data>
+                                <Label>Name:</Label>
+                                {isEditing ? (
+                                    <>
+                                        <FieldInput type="text" name="name" />
+                                        <ErrorMessage name="name" component={ErrorLabel} />
+                                    </>
+                                ) : (
+                                    <Value>{data.name}</Value>
+                                )}
+                            </Data>
+                        </SectionItem>
+                        <SectionItem>
+                            <IconWrapper>
+                                <IoMailOutline size={24} color="#333" />
+                            </IconWrapper>
+                            <Data>
+                                <Label>Email:</Label>
+                                {isEditing ? (
+                                    <>
+                                        <FieldInput type="email" name="email" />
+                                        <ErrorMessage name="email" component={ErrorLabel} />
+                                    </>
+                                ) : (
+                                    <Value>{data.email}</Value>
+                                )}
+                            </Data>
+                        </SectionItem>
+                    </Section>
+                    <ButtonSection>
+                        <Button onClick={() => setIsEditing(!isEditing)}>
+                            {isEditing ? 'Cancel' : 'Edit Profile'}
+                        </Button>
+                        {isEditing && (
+                            <Button type="submit">
+                                {isLoading ? <MiniSpinner /> : 'Save'}
+                            </Button>
+                        )}
+                    </ButtonSection>
+                </Form>
+            </Formik>
         </Container>
     );
 }
-
-export default Settings;
 
 const Container = styled.div`
     display: flex;
@@ -117,7 +190,7 @@ const Header = styled.div`
     background-color: #0d0c22;
     height: 55px;
     width: 100%;
-    border-radius:1rem  0 0 0;
+    border-radius: 1rem 0 0 0;
     box-shadow: 0 0 0.5rem #00000029;
     h1 {
         color: white;
@@ -125,10 +198,8 @@ const Header = styled.div`
     }
 `;
 
-
-
 const AvatarContainer = styled.div`
-position: relative;
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -148,20 +219,18 @@ const AvatarEditButton = styled.button`
     text-align: center;
     padding: 0.5rem;
     cursor: pointer;
-    svg{
+    svg {
         transition: transform 0.3s;
         height: 1.2rem;
         width: 1.2rem;
-
     }
-    
     transition: background-color 0.3s;
     &:hover {
         background-color: #141336;
     }
 `;
 
-const Input = styled.input`
+const FieldInput = styled(Field)`
     border: none;
     font-size: 0.8rem;
     font-weight: 500;
@@ -174,7 +243,6 @@ const Input = styled.input`
     &:focus {
         outline: none;
     }
-
 `;
 
 const Section = styled.div`
@@ -195,13 +263,13 @@ const SectionItem = styled.div`
 const IconWrapper = styled.div`
     display: flex;
     align-items: center;
-    
     justify-content: center;
     background-color: #f0f0f0;
     border-radius: 50%;
     width: 36px;
     height: 36px;
 `;
+
 const Data = styled.div`
     display: flex;
     flex-direction: column;
@@ -209,7 +277,7 @@ const Data = styled.div`
 `;
 
 const Label = styled.div`
-    font-size: 1rem ;
+    font-size: 1rem;
     font-weight: 500;
     color: #333;
 `;
@@ -218,6 +286,7 @@ const Value = styled.div`
     color: #777;
     font-size: 0.8rem;
 `;
+
 const ButtonSection = styled.div`
     display: flex;
     justify-content: flex-end;
@@ -225,8 +294,8 @@ const ButtonSection = styled.div`
     gap: 0.5rem;
     padding: 1rem;
 `;
-const Button = styled.button`
 
+const Button = styled.button`
     background-color: #0d0c22;
     color: #fff;
     border: none;
@@ -240,3 +309,10 @@ const Button = styled.button`
         background-color: #141336;
     }
 `;
+
+const ErrorLabel = styled.div`
+    color: red;
+    font-size: 0.8rem;
+`;
+
+export default Settings;

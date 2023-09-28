@@ -1,7 +1,9 @@
-import User from "../models/user.js";
 import mongoose from "mongoose";
+import path from "path";
+import fs from "fs";
 import { validationResult } from "express-validator";
 
+import User from "../models/user.js";
 export async function getAllUsers(req, res, next) {
   try {
     const { id } = req.params;
@@ -47,7 +49,21 @@ export async function editUser(req, res, next) {
       error.statusCode = 404;
       throw error;
     }
-    if (avatarImage) user.avatarImage = avatarImage;
+
+    if (avatarImage) {
+      if (user.isAvatarImageSet) {
+        const __dirname = path.resolve();
+        const filePath = path.join(__dirname, user.avatarImage);
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.log(err);
+          }
+        });
+      }
+
+      user.avatarImage = `/images/${avatarImage}`;
+      user.isAvatarImageSet = true;
+    }
     if (username) user.username = username;
     if (name) user.name = name;
     if (email) user.email = email;
