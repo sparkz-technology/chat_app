@@ -1,11 +1,190 @@
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { BsWechat } from "react-icons/bs";
 import Avatar from 'react-avatar';
-import useGetAllUser from "./useGetAllUser";
-import Logout from "../authentication/Logout";
-import PropTypes from 'prop-types';
+import { AiFillSetting } from "react-icons/ai"
+import { FaEllipsisV } from "react-icons/fa";
 
+
+import Logout from "../authentication/Logout";
+import Settings from "../authentication/Settings";
+import useGetAllUser from "./useGetAllUser";
+import { setChangeChat, setIsSettings } from "./ChatSlice";
+import { useOutsideClick } from "../../hooks/useOutsideClick";
+
+function Users() {
+
+  const [currentUserName, setCurrentUserName] = useState(null);
+  const [currentUserImage, setCurrentUserImage] = useState(null);
+  const [currentSelected, setCurrentSelected] = useState(undefined);
+  const [isDropup, setIsDropup] = useState(false);
+  const dispatch = useDispatch();
+  const ref = useOutsideClick(() => setIsDropup(false));
+  const { isSettings } = useSelector((state) => state.chat);
+
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("user"));
+    setCurrentUserName(data.username);
+    setCurrentUserImage(data.avatarImage || data.username);
+  }, []);
+
+  const changeCurrentChat = (index, contact) => {
+    setCurrentSelected(index);
+
+    dispatch(setChangeChat(contact))
+
+  };
+
+  const { data: contacts } = useGetAllUser();
+
+  if (!contacts) {
+    return (
+      <Container>
+        <Brand>
+          <Logo />
+          <h3>Chat App</h3>
+        </Brand>
+        <Contacts>
+          <ContactItem>
+            <div className="avatar">
+              <Avatar name="loading" size="40" round={true} />
+            </div>
+            <div className="username">
+              <h3>loading</h3>
+            </div>
+          </ContactItem>
+        </Contacts>
+        <CurrentUser>
+          <div className="avatar">
+            <Avatar name="loading" size="40" round={true} />
+          </div>
+          <div className="username">
+            <h2>loading</h2>
+          </div>
+        </CurrentUser>
+      </Container>
+    );
+  }
+
+
+  return (
+    <>
+      {isSettings ? <Settings /> : <>
+        <Container>
+          <Brand>
+            <Logo />
+            <h3>Chat App</h3>
+          </Brand>
+          <Contacts>
+            {contacts.map((contact, index) => (
+              <ContactItem
+                key={contact._id}
+                className={`contact-item ${index === currentSelected ? "selected" : ""}`}
+                onClick={() => changeCurrentChat(index, contact)}
+              >
+                <div className="avatar">
+                  <Avatar name={contact.username} size="40" round={true} src={contact.avatarImage} />
+                </div>
+                <div className={`username ${index === currentSelected ? "selectedUsername" : ""}`}>
+                  <h3>{contact.username}</h3>
+                </div>
+              </ContactItem>
+            ))}
+          </Contacts>
+          <CurrentUser>
+            <div className="avatar">
+              <Avatar name={currentUserName} size="40" round={true} src={currentUserImage} />
+              <div className="username">
+                <h2>{currentUserName}</h2>
+              </div>
+            </div>
+            <DropUpButton ref={ref}>
+              <button onClick={() => setIsDropup(!isDropup)} style={{ border: "none", background: "none" }}>
+                <FaEllipsisV size={20} color="white" />
+              </button>{
+                isDropup && <DropupContent>
+                  <BgNoneButton onClick={() => {
+                    setIsDropup(false);
+                    dispatch(setIsSettings(true));
+                  }
+                  }>
+                    <ButtonText>Settings</ButtonText>
+                    <AiFillSetting size={20} />
+                  </BgNoneButton>
+                  <Logout />
+                </DropupContent>
+
+              }
+            </DropUpButton>
+          </CurrentUser>
+        </Container>
+      </>}
+
+    </>
+
+  );
+}
+
+const ButtonText = styled.p`
+  margin:0px;
+  text-align: start;
+`;
+
+const DropUpButton = styled.div`
+  position: relative;
+  display: inline-block;
+
+`;
+
+const DropupContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  background-color: #f9f7fc;
+  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.29);
+  z-index: 1;
+  right: 0;
+  bottom: 2rem;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  gap: 0.5rem;
+  width: 7rem;
+  align-items: center;
+  border: 1px solid #f9f7fc;
+  transition: 0.5s ease-in-out;
+`;
+
+const BgNoneButton = styled.button`
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  font-size: 18px;
+  font-weight: bold;
+  transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out;
+  position: relative;
+  padding: 5px;
+  border-radius: 5px;
+  gap: 10px;
+  &:hover {
+    background-color: #ebebeb;
+    transform: scale(1.1);
+    
+  }
+
+  
+
+
+`;
+const Logo = styled(BsWechat)`
+  height: 3rem;
+`;
 const colors = {
   primary: "#0d0c22",
   secondary: "#f2efff",
@@ -98,14 +277,19 @@ const ContactItem = styled.div`
 const CurrentUser = styled.div`
   background-color: ${colors.primary};
   display: flex;
-  justify-content: start;
+  justify-content: space-between;
   align-items: center;
   gap: 2rem;
   height: 4rem;
   padding: 0 1rem;
   position: relative;
 
+
   .avatar {
+    display:  flex;
+    align-items: center;
+    gap: 1rem;
+
     img {
       height: 4rem;
       max-inline-size: 100%;
@@ -128,97 +312,6 @@ const CurrentUser = styled.div`
       }
     }
   }
-`;
-
-function Users({ changeChat }) {
-  Users.propTypes = {
-    changeChat: PropTypes.func.isRequired,
-  };
-
-  const [currentUserName, setCurrentUserName] = useState(null);
-  const [currentUserImage, setCurrentUserImage] = useState(null);
-  const [currentSelected, setCurrentSelected] = useState(undefined);
-
-  useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("user"));
-    setCurrentUserName(data.username);
-    setCurrentUserImage(data.avatarImage || data.username);
-  }, []);
-
-  const changeCurrentChat = (index, contact) => {
-    setCurrentSelected(index);
-    changeChat(contact);
-  };
-
-  const { data: contacts } = useGetAllUser();
-
-  if (!contacts) {
-    return (
-      <Container>
-        <Brand>
-          <Logo />
-          <h3>Chat App</h3>
-        </Brand>
-        <Contacts>
-          <ContactItem>
-            <div className="avatar">
-              <Avatar name="loading" size="40" round={true} />
-            </div>
-            <div className="username">
-              <h3>loading</h3>
-            </div>
-          </ContactItem>
-        </Contacts>
-        <CurrentUser>
-          <div className="avatar">
-            <Avatar name="loading" size="40" round={true} />
-          </div>
-          <div className="username">
-            <h2>loading</h2>
-          </div>
-        </CurrentUser>
-      </Container>
-    );
-  }
-
-  return (
-    <Container>
-      <Brand>
-        <Logo />
-        <h3>Chat App</h3>
-      </Brand>
-      <Contacts>
-        {contacts.map((contact, index) => (
-          <ContactItem
-            key={contact._id}
-            className={`contact-item ${index === currentSelected ? "selected" : ""}`}
-            onClick={() => changeCurrentChat(index, contact)}
-          >
-            <div className="avatar">
-              <Avatar name={contact.username} size="40" round={true} src={contact.avatarImage} />
-            </div>
-            <div className={`username ${index === currentSelected ? "selectedUsername" : ""}`}>
-              <h3>{contact.username}</h3>
-            </div>
-          </ContactItem>
-        ))}
-      </Contacts>
-      <CurrentUser>
-        <div className="avatar">
-          <Avatar name={currentUserName} size="40" round={true} src={currentUserImage} />
-        </div>
-        <div className="username">
-          <h2>{currentUserName}</h2>
-        </div>
-
-        <Logout />
-      </CurrentUser>
-    </Container>
-  );
-}
-
-const Logo = styled(BsWechat)`
-  height: 3rem;
 `;
 
 export default Users;

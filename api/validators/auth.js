@@ -1,17 +1,6 @@
 import { body } from "express-validator";
-import User from "../models/user.js";
-
+import isFieldUnique from "../utils/isFieldUnique.js";
 // Custom validation function for checking if a field exists in the database
-const isFieldUnique = (field, message) => async (value) => {
-  try {
-    const user = await User.findOne({ [field]: value });
-    if (user) {
-      return Promise.reject(message);
-    }
-  } catch (err) {
-    console.log(err);
-  }
-};
 
 export const signupValidator = [
   body("name").trim().not().isEmpty(),

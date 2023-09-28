@@ -1,27 +1,53 @@
 import styled from 'styled-components';
-import { IoArrowBackCircleOutline, IoPersonOutline, IoMailOutline } from 'react-icons/io5';
+import { IoPersonOutline, IoMailOutline } from 'react-icons/io5';
 import { FaUser } from 'react-icons/fa';
-import { BiSolidCamera } from 'react-icons/bi';
 import Avatar from 'react-avatar';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { BsFillCameraFill } from 'react-icons/bs';
+import { useDispatch } from 'react-redux';
+import { setIsSettings } from '../chat/ChatSlice';
+import BackButton from '../../ui/BackButton';
 
 function Settings() {
     const data = JSON.parse(localStorage.getItem('user'));
     const [isEditing, setIsEditing] = useState(false);
+    const [image, setImage] = useState(null);
+    const imageUploadRef = useRef(null);
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => setImage(reader.result)
+
+    }
+    const dispatch = useDispatch();
 
     return (
         <Container>
             <Header>
-                <BackButton>
-                    <IoArrowBackCircleOutline size={30} color="white" />
-                </BackButton>
+                <BackButton onClick={() => dispatch(setIsSettings(false))} />
+
                 <h1>Settings</h1>
             </Header>
             <AvatarContainer>
-                <Avatar name={data.name} size="150" round={true} src={data.avatarImage} />
-                <AvatarEditButton>
-                    <BiSolidCamera size={20} color="#fff" />
-                </AvatarEditButton>
+                {
+                    image ? <Avatar name={data.name} size="150" round={true} src={image} /> :
+                        <Avatar name={data.name} size="150" round={true} src={data.avatarImage} />
+                }
+                {
+                    isEditing && <AvatarEditButton onClick={() => imageUploadRef.current.click()}>
+                        <BsFillCameraFill color="#fff" />
+                    </AvatarEditButton>
+                }
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    ref={imageUploadRef}
+                    style={{ display: 'none' }} // Hide the input element
+                />
+
+
             </AvatarContainer>
             <Section>
                 <SectionItem>
@@ -62,7 +88,6 @@ function Settings() {
                 </SectionItem>
             </Section>
             <ButtonSection>
-                <Button>Change Password</Button>
                 <Button onClick={() => setIsEditing(!isEditing)}>{
                     isEditing ? 'Cancel' : 'Edit Profile'}</Button>
                 {isEditing && <Button>Save</Button>}
@@ -80,6 +105,8 @@ const Container = styled.div`
     height: 100%;
     width: 100%;
     overflow: hidden;
+    box-sizing: border-box;
+    box-shadow: 0 0 0.5rem #00000029;
 `;
 
 const Header = styled.div`
@@ -88,9 +115,9 @@ const Header = styled.div`
     align-items: center;
     gap: 0.5rem;
     background-color: #0d0c22;
-    height: 3rem;
+    height: 55px;
     width: 100%;
-    border-radius: 0 1rem 0 0;
+    border-radius:1rem  0 0 0;
     box-shadow: 0 0 0.5rem #00000029;
     h1 {
         color: white;
@@ -98,10 +125,6 @@ const Header = styled.div`
     }
 `;
 
-const BackButton = styled.div`
-    cursor: pointer;
-    margin-left: 1rem;
-`;
 
 
 const AvatarContainer = styled.div`
@@ -125,6 +148,12 @@ const AvatarEditButton = styled.button`
     text-align: center;
     padding: 0.5rem;
     cursor: pointer;
+    svg{
+        transition: transform 0.3s;
+        height: 1.2rem;
+        width: 1.2rem;
+
+    }
     
     transition: background-color 0.3s;
     &:hover {
@@ -134,13 +163,18 @@ const AvatarEditButton = styled.button`
 
 const Input = styled.input`
     border: none;
-    border-radius: 0.5rem;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
+    font-size: 0.8rem;
     font-weight: 500;
     color: #333;
-    background-color: #f0f0f0;
-    width: 100%;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: transparent;
+    border-bottom: 1px solid #333;
+    transition: border-bottom 0.3s;
+    &:focus {
+        outline: none;
+    }
+
 `;
 
 const Section = styled.div`
@@ -186,7 +220,7 @@ const Value = styled.div`
 `;
 const ButtonSection = styled.div`
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     gap: 0.5rem;
     padding: 1rem;

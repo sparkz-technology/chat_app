@@ -1,9 +1,11 @@
 import express from "express";
 const router = express.Router();
 
-import { getAllUsers, setAvatar } from "../controllers/user.js";
+import editUserValidator from "../validators/user.js";
+import { getAllUsers, editUser } from "../controllers/user.js";
+import { uploadImage } from "../utils/imageprocess.js";
 
 router.get("/all/:id", getAllUsers);
-router.post("/avatar/:id", setAvatar);
+router.patch("/edit/:id", editUserValidator, editUser);
 
 export default router;

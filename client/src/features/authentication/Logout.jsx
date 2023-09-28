@@ -1,34 +1,53 @@
 import styled from "styled-components";
 import { BiPowerOff } from "react-icons/bi";
-
 import MiniSpinner from "../../ui/MiniSpinner";
 import useLogout from "./useLogout";
 
 function Logout() {
   const { mutate, isLoading } = useLogout();
+
   return (
-    <Button onClick={mutate} disabled={isLoading}>
-      {isLoading ? <MiniSpinner /> : <BiPowerOff />}
-    </Button>
+    <StyledButton onClick={mutate} disabled={isLoading}>
+      {isLoading ? <MiniSpinner /> : (
+        <>
+          <ButtonText>Logout</ButtonText>
+          <BiPowerOff size={20} />
+        </>
+      )}
+    </StyledButton>
   );
 }
 
 export default Logout;
-const Button = styled.button`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0.5rem;
-  border-radius: 0.5rem;
-  background-color: #0d0c22;
-  position: absolute;
-  top: 0.8rem;
-  right: 0.5rem;
 
+const StyledButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   border: none;
   cursor: pointer;
-  svg {
-    font-size: 1.3rem;
-    color: #ebe7ff;
+  background-color: transparent;
+  font-size: 18px;
+  font-weight: bold;
+  transition: background-color 0.3s ease-in-out, transform 0.1s ease-in-out;
+  position: relative;
+  width: 100%;
+  padding: 5px;
+  gap: 10px;
+  border-radius: 5px;
+  &:hover {
+    background-color: #ebebeb;
+    transform: scale(1.1);
+    
   }
+
+
+
 `;
+
+const ButtonText = styled.p`
+  margin:0px;
+  text-align: start;
+
+`;
+

@@ -3,16 +3,18 @@ import { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 import Avatar from "react-avatar";
+import { useDispatch, useSelector } from "react-redux";
 
 import useGetMsg from "./useGetMsg";
 import useSendMsg from "./useSendMsg";
 import Input from "./Input";
-import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
 import TypingLoader from "../../ui/TypingLoader";
+import Welcome from "./Welcome";
+import BackButton from "../../ui/BackButton";
+import { setChangeChat } from "./ChatSlice";
 
 // eslint-disable-next-line react/prop-types
-export default function ChatContainer({ currentChat, socket }) {
+export default function ChatContainer({ socket }) {
   const UserId = localStorage.getItem("userId");
 
   const [messages, setMessages] = useState([]);
@@ -20,9 +22,13 @@ export default function ChatContainer({ currentChat, socket }) {
   const [isTyping, setIsTyping] = useState(false);
   const [arrivalMessage, setArrivalMessage] = useState(null);
 
+  const currentChat = useSelector((state) => state.chat.changeChat)
+  const dispatch = useDispatch()
   const scrollRef = useRef();
   const { mutate: setMsg } = useSendMsg();
   const { data: messagesData } = useGetMsg(UserId, currentChat);
+
+
 
   useEffect(() => {
     if (messagesData) setMessages(messagesData);
@@ -31,14 +37,16 @@ export default function ChatContainer({ currentChat, socket }) {
   // for typing
   const typingMsg = useSelector((state) => state.chat.message);
   useEffect(() => {
+    if (!socket.current) return;
+
     if (typingMsg !== "") {
       socket.current.emit("typing", {
-        to: currentChat._id,
+        to: currentChat?._id,
         from: UserId,
       });
     }
     socket.current.on("typing", (data) => {
-      if (data.from === currentChat._id) {
+      if (data.from === currentChat?._id) {
         setIsTyping(true);
       }
     }
@@ -46,14 +54,16 @@ export default function ChatContainer({ currentChat, socket }) {
   }, [typingMsg, currentChat, socket, UserId]);
 
   useEffect(() => {
+    if (!socket.current) return;
+
     if (typingMsg === "") {
       socket.current?.emit("stop-typing", {
-        to: currentChat._id,
+        to: currentChat?._id,
         from: UserId,
       });
     }
     socket.current?.on("stop-typing", (data) => {
-      if (data.from === currentChat._id) {
+      if (data.from === currentChat?._id) {
         setIsTyping(false);
       }
     });
@@ -62,12 +72,14 @@ export default function ChatContainer({ currentChat, socket }) {
 
 
   const handleSendMsg = async (msg) => {
+    if (!socket.current) return;
+
     socket.current.emit("send-msg", {
-      to: currentChat._id,
+      to: currentChat?._id,
       from: UserId,
       msg,
     });
-    const values = { from: UserId, to: currentChat._id, message: msg };
+    const values = { from: UserId, to: currentChat?._id, message: msg };
     setMsg(values);
     const msgs = [...messages];
     msgs.push({ fromSelf: true, message: msg });
@@ -75,6 +87,7 @@ export default function ChatContainer({ currentChat, socket }) {
   };
 
   useEffect(() => {
+
     if (socket.current) {
       const currentSocket = socket.current;
 
@@ -98,10 +111,11 @@ export default function ChatContainer({ currentChat, socket }) {
     , [messages]);
 
   useEffect(() => {
+    if (!socket.current) return;
+
     const currentSocket = socket.current;
 
     socket.current?.emit("check-online", currentChat?._id);
-    toast.error(currentChat?.username + " is offline");
     return () => {
       currentSocket?.emit("check-offline", currentChat?._id);
     }
@@ -115,7 +129,6 @@ export default function ChatContainer({ currentChat, socket }) {
         setIsOnline(true);
       });
       socket.current.on("is-offline", (data) => {
-        toast.error(currentChat?.username + " is offline");
         if (data === currentChat?._id)
           setIsOnline(false);
       });
@@ -127,10 +140,12 @@ export default function ChatContainer({ currentChat, socket }) {
 
   }, [socket, currentChat]);
 
+  if (!currentChat) return <Welcome />;
   return (
     <Container>
       <div className="chat-header">
         <div className="user-details">
+          <BackButton onClick={() => dispatch(setChangeChat(null))} />
           <div className="avatar">
             <Avatar name={currentChat?.username} size="40" round={true} src={currentChat?.avatarImage} />
           </div>
@@ -198,15 +213,15 @@ position  : relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 2rem;
+    /* padding: 0 2rem; */
     background-color: #0d0c22;
     box-shadow: 0 0 0.5rem #00000029;
 
     .user-details {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      padding: 1rem 0;
+      gap: 0.5rem;
+      /* padding: 1rem 0; */
       .avatar {
         img {
           height: 3rem;

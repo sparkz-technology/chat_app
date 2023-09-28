@@ -1,15 +1,12 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { io } from "socket.io-client";
 import styled from "styled-components";
 
 import Users from "../features/chat/Users";
 import Container from "../features/chat/Container";
-import Welcome from "../features/chat/Welcome";
-import Settings from "../features/authentication/Settings";
 
 export default function Chat() {
   const socket = useRef();
-  const [currentChat, setCurrentChat] = useState(undefined);
 
   const host = "http://localhost:8000";
 
@@ -35,20 +32,13 @@ export default function Chat() {
 
   }, [currentUserId]);
 
-  const handleChatChange = (chat) => {
-    setCurrentChat(chat);
-  };
+
   return (
     <>
       <Cont>
         <div className="container">
-          <Users changeChat={handleChatChange} />
-          {currentChat === undefined ? (
-            // <Welcome />
-            <Settings />
-          ) : (
-            <Container currentChat={currentChat} socket={socket} />
-          )}
+          <Users />
+          <Container socket={socket} />
         </div>
       </Cont>
     </>
