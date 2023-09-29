@@ -6,13 +6,13 @@ import fs from "fs";
 import path from "path";
 const __dirname = path.resolve();
 
-import config from "./config.js";
+import constant from "./config/constant.js";
 import errorMiddleware from "./middlewares/error.js";
 import authRoutes from "./routes/auth.js";
 import userRoutes from "./routes/user.js";
 import messageRoutes from "./routes/message.js";
 
-const { ORIGIN, NODE_ENV } = config;
+const { ORIGIN, NODE_ENV } = constant;
 
 const app = express();
 const accessLogStream = fs.createWriteStream("./access.log", { flags: "a" });
@@ -23,7 +23,12 @@ if (NODE_ENV === "development") {
 app.use(morgan("combined", { stream: accessLogStream }));
 app.use("/images", express.static(path.join(__dirname, "images")));
 
-app.use(cors({}));
+app.use(
+  cors({
+    origin: ORIGIN,
+    credentials: true,
+  })
+);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

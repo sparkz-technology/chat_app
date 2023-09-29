@@ -86,7 +86,7 @@ export default function ChatContainer({ socket }) {
     const values = { from: UserId, to: currentChat?._id, message: msg };
     setMsg(values);
     const msgs = [...messages];
-    msgs.push({ fromSelf: true, message: msg });
+    msgs.push({ fromSelf: true, message: msg, time: new Date().toLocaleString("en-US", { hour12: true }), });
     setMessages(msgs);
   };
 
@@ -187,8 +187,16 @@ export default function ChatContainer({ socket }) {
                 className={`message ${message.fromSelf ? "sended" : "received"}`}
               >
                 <div className="content">
-                  <p>{message.message}</p>
+                  <div className="userMsg">
+                    <p>{message.message}</p>
+                  </div>
+
+
+                  <div className="time">
+                    <p>{message.time}</p>
+                  </div>
                 </div>
+
               </div>
             </div>
           ))}
@@ -294,13 +302,17 @@ position  : relative;
     .message {
       display: flex;
       align-items: center;
-      .content {
-        max-width: 40%;
-        overflow-wrap: break-word;
+      .userMsg{
         padding: 0.7rem 1rem;
         font-size: 0.9rem;
         border-radius: 1rem;
         color: #d1d1d1;
+        
+      }
+      .content {
+        max-width: 40%;
+        overflow-wrap: break-word;
+      
         p {
           margin: 0;
         }
@@ -308,17 +320,26 @@ position  : relative;
           max-width: 70%;
         }
       }
+      .time {
+        margin-top: 10px;
+        font-size: 0.7rem;
+        color: #d1d1d1;
+        p{
+          margin: 0;
+        }
+
+      }
     }
     .sended {
       justify-content: flex-end;
-      .content {
+      .userMsg {
         color: #0d0c22;
         background-color: #fff;
       }
     }
     .received {
       justify-content: flex-start;
-      .content {
+      .userMsg {
         background-color: #0d0c22;
         color: #fff;
       }

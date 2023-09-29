@@ -4,6 +4,7 @@ const MessageSchema = new mongoose.Schema(
   {
     message: {
       text: { type: String, required: true },
+      time: { type: Date, default: Date.now },
     },
     users: Array,
     sender: {

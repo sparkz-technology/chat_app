@@ -4,8 +4,8 @@ import { validationResult } from "express-validator";
 
 import { onlineUsers } from "../socket.js";
 import User from "../models/user.js";
-import config from "../config.js";
-const { JWT_EXPIRE, JWT_SECRET } = config;
+import constant from "../config/constant.js";
+const { JWT_EXPIRE, JWT_SECRET } = constant;
 
 export async function postSignup(req, res, next) {
   const { name, username, email, password } = req.body;
@@ -79,6 +79,7 @@ export async function postLogin(req, res, next) {
   }
 }
 export async function logOut(req, res, next) {
+  console.log(req);
   try {
     const { id } = req.params;
 

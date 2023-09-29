@@ -19,6 +19,7 @@ export async function getMessages(req, res, next) {
       return {
         fromSelf: msg.sender.toString() === from,
         message: msg.message.text,
+        time: msg.message.time.toLocaleString("en-US", { hour12: true }),
       };
     });
     res.json(projectedMessages);

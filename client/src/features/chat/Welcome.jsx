@@ -25,10 +25,10 @@ const WelcomeMessage = styled.h1`
 
 const SubMessage = styled.p`
     font-size: 1.8em;
-    color: #f1f1f1;
     margin-top: 1rem;
     line-height: 1.4;
     font-weight: 300;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 `;
 
 

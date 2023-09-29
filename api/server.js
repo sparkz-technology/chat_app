@@ -1,30 +1,12 @@
-import mongoose from "mongoose";
 import app from "./app.js";
 
-import config from "./config.js";
+import db from "./config/db.js";
+import constant from "./config/constant.js";
 import { setupSocket } from "./socket.js";
 
-const { MONGO_URI, PORT, ORIGIN } = config;
+const { PORT, ORIGIN } = constant;
 
-async function startDB() {
-  try {
-    await mongoose.connect(MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    mongoose.connection.on(
-      "error",
-      console.error.bind(console, "MongoDB connection error:")
-    );
-    mongoose.connection.once("open", () => {
-      console.log("MongoDB database connection established successfully");
-    });
-  } catch (error) {
-    console.error(error);
-    process.exit(1);
-  }
-}
-
+db();
 async function startServer() {
   try {
     const server = app.listen(PORT, () => {
@@ -38,5 +20,4 @@ async function startServer() {
   }
 }
 
-startDB();
 startServer();
