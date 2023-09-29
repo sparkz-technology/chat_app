@@ -3,7 +3,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider } from "react-redux";
 
-import store from "./store";
+import Store from "./Store";
 import Login from "./pages/Login";
 import GlobalStyle from "./styles/GlobalStyle";
 import ToasterContainer from "./ui/ToasterContainer";
@@ -32,7 +32,7 @@ const router = createBrowserRouter([
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Provider store={store}>
+      <Provider store={Store}>
         <ReactQueryDevtools initialIsOpen={false} />
         <GlobalStyle />
         <RouterProvider router={router}></RouterProvider>
