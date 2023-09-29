@@ -11,8 +11,9 @@ import Input from "./Input";
 import TypingLoader from "../../ui/TypingLoader";
 import Welcome from "./Welcome";
 import BackButton from "../../ui/BackButton";
-import { setChangeChat } from "./ChatSlice";
+import { setChangeChat, setSelectedChat, setShowUserDetails } from "./ChatSlice";
 import { API_URL } from "../../utils/Constant";
+import UserContainer from "./UserContainer";
 
 // eslint-disable-next-line react/prop-types
 export default function ChatContainer({ socket }) {
@@ -28,6 +29,8 @@ export default function ChatContainer({ socket }) {
   const scrollRef = useRef();
   const { mutate: setMsg } = useSendMsg();
   const { data: messagesData } = useGetMsg(UserId, currentChat);
+  const showUserDetails = useSelector((state) => state.chat.showUserDetails);
+
 
 
 
@@ -140,42 +143,81 @@ export default function ChatContainer({ socket }) {
     }
 
   }, [socket, currentChat]);
+  const handleBack = () => {
+    if (showUserDetails) {
+      dispatch(setShowUserDetails(false));
+      return;
+    }
+
+    dispatch(setChangeChat(null));
+    dispatch(setSelectedChat(null))
+  }
+
 
   if (!currentChat) return <Welcome />;
+
   return (
     <Container>
-      <div className="chat-header">
-        <div className="user-details">
-          <BackButton onClick={() => dispatch(setChangeChat(null))} />
-          <div className="avatar">
-            <Avatar name={currentChat?.username} size="40" round={true} src={API_URL + currentChat?.avatarImage} />
-          </div>
-          <div className="username">
-            <h3>{currentChat?.username}</h3>
-          </div>
-          <p style={{ color: isOnline ? "green" : "red" }}>
-            {isOnline ? "Online" : "Offline"}
-          </p>
+      <div className="chat-header" >
+        <div className="user-details" >
+          <BackButton onClick={handleBack}
+          />
+          <UserDetails onClick={() => {
+            dispatch(setShowUserDetails(true));
+            console.log(showUserDetails);
+
+          }}>
+            <div className="avatar">
+              <Avatar name={currentChat?.username} size="40" round={true} src={API_URL + currentChat?.avatarImage} />
+            </div>
+            <div className="username">
+              <h3>{currentChat?.username}</h3>
+            </div>
+            <p style={{ color: isOnline ? "green" : "red" }}>
+              {isOnline ? "Online" : "Offline"}
+            </p>
+          </UserDetails>
         </div>
       </div>
-      <div className="chat-messages" >
-        {messages.map((message) => (
-          <div key={uuidv4()} ref={scrollRef}>
-            <div
-              className={`message ${message.fromSelf ? "sended" : "received"}`}
-            >
-              <div className="content">
-                <p>{message.message}</p>
+      {!showUserDetails ? (<>
+        <div className="chat-messages" >
+          {messages.map((message) => (
+            <div key={uuidv4()} ref={scrollRef}>
+              <div
+                className={`message ${message.fromSelf ? "sended" : "received"}`}
+              >
+                <div className="content">
+                  <p>{message.message}</p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </div>
-      <Typing> {isTyping ? (<><p>typing</p>  < TypingLoader /> </>) : ""}</Typing>
-      <Input handleSendMsg={handleSendMsg} />
+          ))}
+        </div>
+        <Typing> {isTyping ? (<><p>typing</p>  < TypingLoader /> </>) : ""}</Typing>
+        <Input handleSendMsg={handleSendMsg} /> </>) : (
+        <>
+          <UserContainer />
+        </>)
+      }
     </Container>
   );
 }
+
+const UserDetails = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding:0 0.5rem ;
+  width: 100%;
+  &:hover {
+    background-color: #ffffff29;
+    opacity: 0.8;
+
+  }
+`;
+
 
 const Typing = styled.div`
   position: absolute;

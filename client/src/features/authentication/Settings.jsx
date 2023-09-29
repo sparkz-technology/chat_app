@@ -12,9 +12,11 @@ import BackButton from '../../ui/BackButton';
 import useEditUser from './useEditUser';
 import MiniSpinner from '../../ui/MiniSpinner';
 import { API_URL } from '../../utils/Constant';
+import useGetUserInfo from '../chat/useGetUserInfo';
 
 function Settings() {
-    const data = JSON.parse(localStorage.getItem('user'));
+    const userId = localStorage.getItem('userId');
+    const { currentUser } = useGetUserInfo(userId);
     const [isEditing, setIsEditing] = useState(false);
     const [image, setImage] = useState(null);
     const imageUploadRef = useRef(null);
@@ -32,43 +34,36 @@ function Settings() {
     });
 
     const initialValues = {
-        username: data.username,
-        name: data.name,
-        email: data.email,
+        username: currentUser.username,
+        name: currentUser.name,
+        email: currentUser.email,
     };
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-        // const reader = new FileReader();
-        // reader.readAsDataURL(file);
-        // reader.onloadend = () => setImage(reader.result);
         setImage(file);
     };
-    const { mutate, isLoading } = useEditUser();
+    const { mutate, isLoading } = useEditUser(setIsEditing);
     function handleEditProfile(values) {
         const formData = new FormData();
-        formData.append('id', data._id);
-        if (values.username !== data.username) {
+        formData.append('id', currentUser._id);
+        if (values.username !== currentUser.username) {
             formData.append('username', values.username);
         }
-        if (values.name !== data.name) {
+        if (values.name !== currentUser.name) {
             formData.append('name', values.name);
         }
-        if (values.email !== data.email) {
+        if (values.email !== currentUser.email) {
             formData.append('email', values.email);
         }
         if (image) {
             formData.append('file', image);
         }
-        if (values.username === data.username && values.name === data.name && values.email === data.email && !image) {
+        if (values.username === currentUser.username && values.name === currentUser.name && values.email === currentUser.email && !image) {
             return;
         }
         console.log(formData);
         mutate(formData);
-
-
-        // dispatch(editUser(formData));
-        // dispatch(setIsSettings(false));
     }
 
 
@@ -87,10 +82,10 @@ function Settings() {
                 <Form>
                     <AvatarContainer>
                         <Avatar
-                            name={data.name}
+                            name={currentUser?.name}
                             size="150"
                             round={true}
-                            src={!image ? API_URL + data.avatarImage : URL.createObjectURL(image)}
+                            src={!image ? API_URL + currentUser?.avatarImage : URL.createObjectURL(image)}
                         />
 
                         {isEditing && (
@@ -115,11 +110,11 @@ function Settings() {
                                 <Label>Username:</Label>
                                 {isEditing ? (
                                     <>
-                                        <FieldInput type="text" name="username" />
+                                        <FieldInput type="text" name="username" maxLength="6" />
                                         <ErrorMessage name="username" component={ErrorLabel} />
                                     </>
                                 ) : (
-                                    <Value>{data.username}</Value>
+                                    <Value>{currentUser?.username}</Value>
                                 )}
                             </Data>
                         </SectionItem>
@@ -135,7 +130,7 @@ function Settings() {
                                         <ErrorMessage name="name" component={ErrorLabel} />
                                     </>
                                 ) : (
-                                    <Value>{data.name}</Value>
+                                    <Value>{currentUser?.name}</Value>
                                 )}
                             </Data>
                         </SectionItem>
@@ -151,13 +146,13 @@ function Settings() {
                                         <ErrorMessage name="email" component={ErrorLabel} />
                                     </>
                                 ) : (
-                                    <Value>{data.email}</Value>
+                                    <Value>{currentUser.email}</Value>
                                 )}
                             </Data>
                         </SectionItem>
                     </Section>
                     <ButtonSection>
-                        <Button onClick={() => setIsEditing(!isEditing)}>
+                        <Button onClick={() => setIsEditing(!isEditing)} type="button">
                             {isEditing ? 'Cancel' : 'Edit Profile'}
                         </Button>
                         {isEditing && (

@@ -78,3 +78,26 @@ export async function editUser(req, res, next) {
     next(error);
   }
 }
+
+export async function getUser(req, res, next) {
+  const { id } = req.params;
+  try {
+    const user = await User.findById(id).select([
+      "name",
+      "email",
+      "username",
+      "avatarImage",
+      "_id",
+    ]);
+    if (!user) {
+      const error = new Error("User not found");
+      error.statusCode = 404;
+      throw error;
+    }
+
+    res.status(200).json({ message: "User fetched", data: user });
+  } catch (error) {
+    if (!error.statusCode) error.statusCode = 500;
+    next(error);
+  }
+}

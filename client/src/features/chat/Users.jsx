@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { BsWechat } from "react-icons/bs";
 import Avatar from 'react-avatar';
@@ -10,27 +10,24 @@ import { API_URL } from "../../utils/Constant";
 import Logout from "../authentication/Logout";
 import Settings from "../authentication/Settings";
 import useGetAllUser from "./useGetAllUser";
-import { setChangeChat, setIsSettings } from "./ChatSlice";
+import { setChangeChat, setIsSettings, setSelectedChat, setShowUserDetails } from "./ChatSlice";
 import { useOutsideClick } from "../../hooks/useOutsideClick";
+import useGetUserInfo from "./useGetUserInfo";
 
 function Users() {
+  // const [currentSelected, setCurrentSelected] = useState(undefined);
+  const { selectedChat: currentSelected } = useSelector((state) => state.chat);
 
-  const [currentUserName, setCurrentUserName] = useState(null);
-  const [currentUserImage, setCurrentUserImage] = useState(null);
-  const [currentSelected, setCurrentSelected] = useState(undefined);
   const [isDropup, setIsDropup] = useState(false);
   const dispatch = useDispatch();
   const ref = useOutsideClick(() => setIsDropup(false));
   const { isSettings } = useSelector((state) => state.chat);
-
-  useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("user"));
-    setCurrentUserName(data.username);
-    setCurrentUserImage(data.avatarImage || data.username);
-  }, []);
+  const { currentUser, isLoading } = useGetUserInfo(localStorage.getItem("userId"));
 
   const changeCurrentChat = (index, contact) => {
-    setCurrentSelected(index);
+    // setCurrentSelected(index);
+    dispatch(setSelectedChat(index))
+    dispatch(setShowUserDetails(false));
 
     dispatch(setChangeChat(contact))
 
@@ -92,11 +89,12 @@ function Users() {
               </ContactItem>
             ))}
           </Contacts>
+
           <CurrentUser>
             <div className="avatar">
-              <Avatar name={currentUserName} size="40" round={true} src={API_URL + currentUserImage} />
+              <Avatar name={isLoading ? currentUser?.username : "loading"} size="40" round={true} src={!isLoading && API_URL + currentUser?.avatarImage} />
               <div className="username">
-                <h2>{currentUserName}</h2>
+                <h2>{currentUser?.username}</h2>
               </div>
             </div>
             <DropUpButton ref={ref}>

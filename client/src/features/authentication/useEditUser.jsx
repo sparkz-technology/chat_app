@@ -1,16 +1,17 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 import { EditUser } from "../../services/chatAPI";
 
-function useEditUser() {
-    // const userId = localStorage.getItem("userId ") || "650dc4dea8930c693e515393";
-    const userId = JSON.parse(localStorage.getItem("user"))._id;
+function useEditUser(setIsEditing) {
+    const queryClient = useQueryClient();
+    const userId = localStorage.getItem("userId");
     const mutationFn = (value) => EditUser(value, userId);
     const { mutate, isLoading } = useMutation(mutationFn, {
-        onSuccess: (data) => {
+        onSuccess: () => {
             toast.success("Edit successful");
-            console.log(data);
+            setIsEditing(false);
+            queryClient.invalidateQueries(["user", userId]);
 
             // localStorage.setItem("user", JSON.stringify(data.user));
 

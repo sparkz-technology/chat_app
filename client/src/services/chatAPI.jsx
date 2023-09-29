@@ -35,3 +35,7 @@ export async function EditUser(values, userId) {
   return responce.data;
 }
 
+export async function GetUserInfo(userId) {
+  const responce = await axios.get(`http://localhost:8000/user/${userId}`);
+  return responce.data;
+}

@@ -4,6 +4,8 @@ const initialState = {
   message: "",
   isSettings: false,
   changeChat: null,
+  selectedChat: null,
+  showUserDetails: false,
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -20,9 +22,15 @@ const ChatSlice = createSlice({
     setChangeChat: (state, action) => {
       state.changeChat = action.payload;
     },
+    setSelectedChat: (state, action) => {
+      state.selectedChat = action.payload;
+    },
+    setShowUserDetails: (state, action) => {
+      state.showUserDetails = action.payload;
+    },
   },
 });
 
-export const { setMessage, setIsSettings, setChangeChat } = ChatSlice.actions;
+export const { setMessage, setIsSettings, setChangeChat, setSelectedChat, setShowUserDetails } = ChatSlice.actions;
 
 export default ChatSlice.reducer;

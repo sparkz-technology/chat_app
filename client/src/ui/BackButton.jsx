@@ -22,4 +22,10 @@ const Button = styled.button`
     background: none;   
     border: none;
     outline: none;
+    padding: 10px;
+    transition: all 0.3s ease;
+    &:hover {
+        color: #ffffff29;
+        opacity: 0.8;
+    }
 `;

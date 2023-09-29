@@ -4,21 +4,21 @@ import styled from "styled-components";
 
 import Users from "../features/chat/Users";
 import Container from "../features/chat/Container";
+import { API_URL } from "../utils/Constant";
+
 
 export default function Chat() {
   const socket = useRef();
 
-  const host = "http://localhost:8000";
 
   const currentUserId = localStorage.getItem("userId");
   useEffect(() => {
     if (currentUserId) {
-      socket.current = io(host);
+      socket.current = io(API_URL);
       if (socket.current) {
         socket.current.on("connect", () => {
           socket.current.emit("add-user", currentUserId);
         });
-        // Handle connection errors
         socket.current.on("connect_error", (error) => {
           console.log("Socket connection error:", error);
         });
@@ -32,12 +32,12 @@ export default function Chat() {
 
   }, [currentUserId]);
 
-
   return (
     <>
       <Cont>
         <div className="container">
           <Users />
+
           <Container socket={socket} />
         </div>
       </Cont>
