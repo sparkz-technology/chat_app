@@ -30,5 +30,5 @@ const uploadImage = multer({
   limits: { fileSize: fileSizes },
   fileFilter: fileFilter,
 });
-
-module.exports = uploadImage.single("file");
+const imageProcess = uploadImage.single("file");
+module.exports = imageProcess;
