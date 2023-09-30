@@ -1,1 +1,1 @@
-export const API_URL = "http://localhost:8000";
+export const API_URL = "https://chat-app-dkot.vercel.app";
