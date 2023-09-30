@@ -3,7 +3,6 @@ const bcrypt = require("bcryptjs");
 const { validationResult } = require("express-validator");
 const User = require("../models/user.js");
 const constant = require("../config/constant.js");
-const { onlineUsers } = require("../socket.js");
 const { JWT_EXPIRE, JWT_SECRET } = constant;
 
 exports.postSignup = async (req, res, next) => {
@@ -68,7 +67,6 @@ exports.postLogin = async (req, res, next) => {
       { expiresIn: JWT_EXPIRE }
     );
     delete loadedUser.password;
-    onlineUsers.set(loadedUser._id.toString(), loadedUser);
     res
       .status(200)
       .json({ token, user: loadedUser, userId: loadedUser._id.toString() });
