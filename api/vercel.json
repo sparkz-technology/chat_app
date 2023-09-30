@@ -1,9 +1,10 @@
 {
   "version": 2,
+  "type": "module",
   "builds": [
     {
       "src": "server.js",
-      "use": "@vercel/node"
+      "use": "@vercel/node-mjs"
     }
   ],
   "routes": [
