@@ -1,13 +1,13 @@
-import { Server } from "socket.io";
+const { Server } = require("socket.io");
 
 // Create a map to store online users
-export const onlineUsers = new Map();
+exports.onlineUsers = new Map();
 
 // Define a threshold for considering a user as offline
 const reconnectThreshold = 60000;
 
 // Function to set up the Socket.IO server
-export const setupSocket = (server, origin) => {
+const setupSocket = (server, origin) => {
   const io = new Server(server, {
     cors: {
       origin,
@@ -94,3 +94,4 @@ export const setupSocket = (server, origin) => {
     });
   });
 };
+module.exports = setupSocket;

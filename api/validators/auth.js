@@ -1,8 +1,8 @@
-import { body } from "express-validator";
-import isFieldUnique from "../utils/isFieldUnique.js";
+const { body } = require("express-validator");
+const isFieldUnique = require("../utils/isFieldUnique.js");
 // Custom validation function for checking if a field exists in the database
 
-export const signupValidator = [
+exports.signupValidator = [
   body("name").trim().not().isEmpty(),
   body("username")
     .trim()
@@ -25,7 +25,7 @@ export const signupValidator = [
     ),
 ];
 
-export const loginValidator = [
+exports.loginValidator = [
   body("email")
     .isEmail()
     .withMessage("Please enter a valid email.")

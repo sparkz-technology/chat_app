@@ -1,4 +1,4 @@
-import config from "../config/constant.js";
+const config = require("../config/constant.js");
 
 const { NODE_ENV } = config;
 
@@ -15,4 +15,4 @@ const errorMiddleware = (err, req, res, next) => {
   next();
 };
 
-export default errorMiddleware;
+module.exports = errorMiddleware;

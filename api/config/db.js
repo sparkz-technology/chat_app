@@ -1,5 +1,6 @@
-import mongoose from "mongoose";
-import constant from "./constant.js";
+const mongoose = require("mongoose");
+const constant = require("./constant.js");
+
 const { MONGO_URI } = constant;
 async function db() {
   try {
@@ -21,4 +22,4 @@ async function db() {
   }
 }
 
-export default db;
+module.exports = db;

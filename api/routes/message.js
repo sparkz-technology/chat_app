@@ -1,10 +1,10 @@
-import express from "express";
+const express = require("express");
 const router = express.Router();
 
-import { addMessage, getMessages } from "../controllers/message.js";
-import isAuth from "../middlewares/is-Auth.js";
+const { addMessage, getMessages } = require("../controllers/message.js");
+const isAuth = require("../middlewares/is-Auth.js");
 
 router.post("/addmsg", isAuth, addMessage);
 router.post("/getmsg", isAuth, getMessages);
 
-export default router;
+module.exports = router;

@@ -1,7 +1,7 @@
-import { body } from "express-validator";
-import isFieldUnique from "../utils/isFieldUnique.js";
+const { body } = require("express-validator");
+const isFieldUnique = require("../utils/isFieldUnique.js");
 
-const editUserValidator = [
+exports.editUserValidator = [
   body("avatarImage").trim().optional(),
   body("username")
     .optional()
@@ -23,5 +23,3 @@ const editUserValidator = [
     .normalizeEmail()
     .custom(isFieldUnique("email", "Email address already exists!")),
 ];
-
-export default editUserValidator;

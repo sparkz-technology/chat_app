@@ -1,7 +1,6 @@
-import multer from "multer";
-import path from "path";
-import fs from "fs";
-const __dirname = path.resolve();
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 
 if (!fs.existsSync(path.join(__dirname, "images"))) {
   fs.mkdirSync(path.join(__dirname, "images"));
@@ -32,4 +31,4 @@ const uploadImage = multer({
   fileFilter: fileFilter,
 });
 
-export const imageProcess = uploadImage.single("file");
+module.exports = uploadImage.single("file");

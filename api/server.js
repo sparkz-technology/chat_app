@@ -1,8 +1,8 @@
-import app from "./app.js";
+const app = require("./app.js");
 
-import db from "./config/db.js";
-import constant from "./config/constant.js";
-import { setupSocket } from "./socket.js";
+const db = require("./config/db.js");
+const constant = require("./config/constant.js");
+const setupSocket = require("./socket.js");
 
 const { PORT, ORIGIN } = constant;
 

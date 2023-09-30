@@ -1,6 +1,5 @@
-import Message from "../models/message.js";
-
-export async function getMessages(req, res, next) {
+const Message = require("../models/message");
+exports.getMessages = async (req, res, next) => {
   try {
     const { from, to } = req.body;
     if (!from || !to) {
@@ -27,9 +26,8 @@ export async function getMessages(req, res, next) {
     if (!error.statusCode) error.statusCode = 500;
     next(error);
   }
-}
-
-export async function addMessage(req, res, next) {
+};
+exports.addMessage = async (req, res, next) => {
   try {
     const { from, to, message } = req.body;
     if (!from || !to || !message) {
@@ -49,4 +47,4 @@ export async function addMessage(req, res, next) {
     if (!error.statusCode) error.statusCode = 500;
     next(error);
   }
-}
+};

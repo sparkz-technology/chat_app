@@ -1,4 +1,4 @@
-import User from "../models/user.js";
+const User = require("../models/user.js");
 
 const isFieldUnique = (field, message) => async (value) => {
   try {
@@ -11,4 +11,4 @@ const isFieldUnique = (field, message) => async (value) => {
   }
 };
 
-export default isFieldUnique;
+module.exports = isFieldUnique;

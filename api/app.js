@@ -1,16 +1,15 @@
-import express from "express";
-import cors from "cors";
-import bodyParser from "body-parser";
-import morgan from "morgan";
-import fs from "fs";
-import path from "path";
-const __dirname = path.resolve();
+const express = require("express");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const morgan = require("morgan");
+const fs = require("fs");
+const path = require("path");
 
-import constant from "./config/constant.js";
-import errorMiddleware from "./middlewares/error.js";
-import authRoutes from "./routes/auth.js";
-import userRoutes from "./routes/user.js";
-import messageRoutes from "./routes/message.js";
+const constant = require("./config/constant.js");
+const errorMiddleware = require("./middlewares/error.js");
+const authRoutes = require("./routes/auth.js");
+const userRoutes = require("./routes/user.js");
+const messageRoutes = require("./routes/message.js");
 
 const { ORIGIN, NODE_ENV } = constant;
 
@@ -42,4 +41,4 @@ app.use("/msg", messageRoutes);
 
 app.use(errorMiddleware);
 
-export default app;
+module.exports = app;

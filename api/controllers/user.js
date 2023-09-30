@@ -1,10 +1,10 @@
-import mongoose from "mongoose";
-import path from "path";
-import fs from "fs";
-import { validationResult } from "express-validator";
+const User = require("../models/user.js");
+const mongoose = require("mongoose");
+const path = require("path");
+const fs = require("fs");
+const { validationResult } = require("express-validator");
 
-import User from "../models/user.js";
-export async function getAllUsers(req, res, next) {
+exports.getAllUsers = async (req, res, next) => {
   try {
     const { id } = req.params;
     if (!id || !mongoose.isValidObjectId(id)) {
@@ -24,9 +24,8 @@ export async function getAllUsers(req, res, next) {
     if (!error.statusCode) error.statusCode = 500;
     next(error);
   }
-}
-
-export async function editUser(req, res, next) {
+};
+exports.editUser = async (req, res, next) => {
   try {
     const userId = req.params.id;
     const { avatarImage, username, name, email } = req.body;
@@ -77,9 +76,8 @@ export async function editUser(req, res, next) {
     if (!error.statusCode) error.statusCode = 500;
     next(error);
   }
-}
-
-export async function getUser(req, res, next) {
+};
+exports.getUser = async (req, res, next) => {
   const { id } = req.params;
   try {
     const user = await User.findById(id).select([
@@ -100,4 +98,4 @@ export async function getUser(req, res, next) {
     if (!error.statusCode) error.statusCode = 500;
     next(error);
   }
-}
+};

@@ -1,13 +1,12 @@
-import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
-import { validationResult } from "express-validator";
-
-import { onlineUsers } from "../socket.js";
-import User from "../models/user.js";
-import constant from "../config/constant.js";
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const { validationResult } = require("express-validator");
+const User = require("../models/user.js");
+const constant = require("../config/constant.js");
+const { onlineUsers } = require("../socket.js");
 const { JWT_EXPIRE, JWT_SECRET } = constant;
 
-export async function postSignup(req, res, next) {
+exports.postSignup = async (req, res, next) => {
   const { name, username, email, password } = req.body;
   try {
     const errors = validationResult(req);
@@ -34,9 +33,9 @@ export async function postSignup(req, res, next) {
     if (!err.statusCode) err.statusCode = 500;
     next(err);
   }
-}
+};
 
-export async function postLogin(req, res, next) {
+exports.postLogin = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const errors = validationResult(req);
@@ -77,9 +76,8 @@ export async function postLogin(req, res, next) {
     if (!err.statusCode) err.statusCode = 500;
     next(err);
   }
-}
-export async function logOut(req, res, next) {
-  console.log(req);
+};
+exports.logOut = async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -99,4 +97,4 @@ export async function logOut(req, res, next) {
     }
     next(error);
   }
-}
+};
