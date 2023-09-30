@@ -1,7 +1,8 @@
 const { Server } = require("socket.io");
 
 // Create a map to store online users
-exports.onlineUsers = new Map();
+const onlineUsers = new Map();
+exports.onlineUsers = onlineUsers;
 
 // Define a threshold for considering a user as offline
 const reconnectThreshold = 60000;

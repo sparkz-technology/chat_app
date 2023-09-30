@@ -2,13 +2,13 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
-if (!fs.existsSync(path.join(__dirname, "images"))) {
-  fs.mkdirSync(path.join(__dirname, "images"));
+if (!fs.existsSync(path.join(__dirname, "..", "images"))) {
+  fs.mkdirSync(path.join(__dirname, "..", "images"));
 }
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "images"));
+    cb(null, path.join(__dirname, "..", "images"));
   },
   filename: function (req, file, cb) {
     req.body.avatarImage = Date.now() + "-" + file.originalname;
