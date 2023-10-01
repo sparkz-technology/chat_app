@@ -11,7 +11,7 @@ const reconnectThreshold = 60000;
 const setupSocket = (server, origin) => {
   const io = new Server(server, {
     cors: {
-      origin: "*", //it was origin that was causing the issue for me and i changed it to "*" and it worked for me
+      origin: " https://chat-app-dkot.vercel.app/socket.io/",
       methods: ["GET", "POST"],
       allowedHeaders: ["my-custom-header"],
       credentials: true,
