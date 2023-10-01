@@ -26,8 +26,6 @@ app.use(
   cors({
     origin: ORIGIN,
     credentials: true, //allow browser to access the socket.io server
-    allowedHeaders: ["Content-Type", "Authorization"],
-    methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
   })
 );
 app.use(bodyParser.json());
