@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import Cookies from 'js-cookie'
 
 import { login } from "../../services/authenticationAPI";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +12,8 @@ export default function useLogin() {
     onSuccess: (data) => {
       toast.success("Login successful");
       localStorage.setItem("token", data.token);
+      Cookies.set('token', data.token, { expires: 7 });
+
       localStorage.setItem("userId", data.user._id);
       localStorage.setItem("user", JSON.stringify(data.user));
       navigate("/");
