@@ -11,7 +11,7 @@ const reconnectThreshold = 60000;
 const setupSocket = (server, origin) => {
   const io = new Server(server,{
     cors: {
-      origin: "https://chat-app-zeta-lyart.vercel.app/*",
+      origin,
       methods: ["GET", "POST", "OPTIONS"],
       credentials: true
     }
