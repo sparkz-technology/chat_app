@@ -1,1 +1,1 @@
-export const API_URL = "https://chat-app-zeta-lyart.vercel.app";
+export const API_URL = "https://chat-app-dkot.vercel.app";
