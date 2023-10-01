@@ -11,9 +11,12 @@ const reconnectThreshold = 60000;
 const setupSocket = (server, origin) => {
   const io = new Server(server, {
     cors: {
-      origin: " https://chat-app-dkot.vercel.app/socket.io/",
+      origin: " https://chat-app-dkot.vercel.app/*",
       methods: ["GET", "POST"],
-      allowedHeaders: ["my-custom-header"],
+      allowedHeaders: [
+        "Access-Control-Allow-Headers",
+        "Origin, X-Requested-With, Content-Type, Accept",
+      ],
       credentials: true,
     },
   });
