@@ -9,14 +9,7 @@ const reconnectThreshold = 60000;
 
 // Function to set up the Socket.IO server
 const setupSocket = (server, origin) => {
-  const io = new Server(server, {
-    cors: {
-      origin: ["https://chat-app-dkot.vercel.app/socket.io/", origin],
-      methods: ["GET", "POST"],
-      allowedHeaders: ["my-custom-header"],
-      credentials: true,
-    },
-  });
+  const io = new Server(server);
 
   // Handle socket connections
   io.on("connection", (socket) => {
