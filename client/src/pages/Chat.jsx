@@ -14,9 +14,8 @@ export default function Chat() {
   const currentUserId = localStorage.getItem("userId");
   useEffect(() => {
     if (currentUserId) {
-      socket.current = io(API_URL, {
-        transports: ["websocket"],
-      });
+      socket.current = io("/"
+      );
       if (socket.current) {
         socket.current.on("connect", () => {
           socket.current.emit("add-user", currentUserId);
