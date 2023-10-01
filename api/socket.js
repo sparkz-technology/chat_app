@@ -9,14 +9,15 @@ const reconnectThreshold = 60000;
 
 // Function to set up the Socket.IO server
 const setupSocket = (server, origin) => {
-  const io = new Server(server, {
-    cors: {
-      origin,
-      methods: ["GET", "POST"],
-      allowedHeaders: ["my-custom-header"],
-      credentials: true,
-    },
-  });
+  // const io = new Server(server, {
+  //   cors: {
+  //     origin,
+  //     methods: ["GET", "POST"],
+  //     allowedHeaders: ["my-custom-header"],
+  //     credentials: true,
+  //   },
+  // });
+  const io = new Server(server); //, { cors: { origin: "*" } });
 
   // Handle socket connections
   io.on("connection", (socket) => {
