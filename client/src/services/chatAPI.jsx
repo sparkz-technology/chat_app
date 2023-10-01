@@ -48,6 +48,7 @@ export async function GetMsg(values) {
 }
 
 export async function EditUser(values, userId) {
+  console.log(values);
   const response = await axios.patch(`${USER_API_URL}/edit/${userId}`, values, {
     headers: {
       "Content-Type": "multipart/form-data",

@@ -89,7 +89,7 @@ function Settings() {
                         />
 
                         {isEditing && (
-                            <AvatarEditButton onClick={() => imageUploadRef.current.click()}>
+                            <AvatarEditButton onClick={() => imageUploadRef.current.click()} type="button">
                                 <BsFillCameraFill color="#fff" />
                             </AvatarEditButton>
                         )}

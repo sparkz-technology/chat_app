@@ -28,6 +28,7 @@ exports.getAllUsers = async (req, res, next) => {
 exports.editUser = async (req, res, next) => {
   try {
     const userId = req.params.id;
+    console.log(req.body);
     const { avatarImage, username, name, email } = req.body;
     if (!userId || !mongoose.isValidObjectId(userId)) {
       const error = new Error("User id is required");
