@@ -14,8 +14,10 @@ const setupSocket = (server, origin) => {
       origin,
       methods: ["GET", "POST"],
       allowedHeaders: ["my-custom-header"],
+      transports: ["websocket", "polling"],
       credentials: true,
     },
+    allowEIO3: true, // false by default for compatibility with older clients like iOS 9 and Android < 5
   });
 
   // Handle socket connections
