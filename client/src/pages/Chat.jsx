@@ -14,7 +14,9 @@ export default function Chat() {
   const currentUserId = localStorage.getItem("userId");
   useEffect(() => {
     if (currentUserId) {
-      socket.current = io(API_URL);
+      socket.current = io("wss://chat-app-dkot.vercel.app/", {
+        transports: ["websocket"],
+      });
       if (socket.current) {
         socket.current.on("connect", () => {
           socket.current.emit("add-user", currentUserId);
