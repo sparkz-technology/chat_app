@@ -167,6 +167,10 @@ const Container = styles.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  @media (max-width: 768px) {
+    width: 90%;
+
+  }
 `;
 const FormWrapper = styles.form`
 
@@ -176,6 +180,12 @@ const FormWrapper = styles.form`
     margin-bottom: 1rem;
     font-weight: 500;
   }
+  @media (max-width: 768px) {
+    p{
+      font-size: 0.7rem;
+    }
+  }
+
 `;
 const Gap = styles.div`
   margin-bottom: 2rem;

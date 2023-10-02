@@ -97,6 +97,11 @@ const Container = styles.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+@media (max-width: 768px) {
+    width: 90%;
+    
+}
+
 `;
 const FormWrapper = styles.form`
 
