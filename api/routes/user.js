@@ -33,9 +33,9 @@ const uploadImage = multer({
   fileFilter: fileFilter,
 }).single("image");
 
-const { editUserValidator } = require("./validators/user.js");
-const { getAllUsers, editUser, getUser } = require("./controllers/user.js");
-const isAuth = require("./middlewares/is-Auth.js");
+const { editUserValidator } = require("../validators/user.js");
+const { getAllUsers, editUser, getUser } = require("../controllers/user.js");
+const isAuth = require("../middlewares/is-Auth.js");
 
 router.use(uploadImage);
 
