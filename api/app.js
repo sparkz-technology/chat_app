@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const fs = require("fs");
 const path = require("path");
+const multer = require("multer");
 
 const constant = require("./config/constant.js");
 const errorMiddleware = require("./middlewares/error.js");
@@ -14,6 +15,7 @@ const messageRoutes = require("./routes/message.js");
 const { ORIGIN, NODE_ENV } = constant;
 
 const app = express();
+app.use(multer().none());
 // const accessLogStream = fs.createWriteStream("./access.log", { flags: "a" });
 if (NODE_ENV === "development") {
   app.use(morgan("dev"));
