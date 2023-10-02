@@ -1,10 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import styled from "styled-components";
 
 import Users from "../features/chat/Users";
 import Container from "../features/chat/Container";
 import { API_URL } from "../utils/Constant";
+import { useSelector } from "react-redux";
 
 
 export default function Chat() {
@@ -34,14 +35,40 @@ export default function Chat() {
     }
 
   }, [currentUserId]);
+  const { selectedChat: currentSelected } = useSelector((state) => state.chat);
+  const [show, setShow] = useState(false)
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width < 768) {
+        setShow(true)
+      } else {
+        setShow(false)
+      }
+    }
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
 
   return (
     <>
       <Cont>
         <div className="container">
-          <Users />
-
-          <Container socket={socket} />
+          {
+            !show ? (
+              <>
+                <Users />
+                <Container socket={socket} />
+              </>
+            ) : (
+              currentSelected === null ? (
+                <Users />
+              ) : (
+                <Container socket={socket} />
+              )
+            )
+          }
         </div>
       </Cont>
     </>
@@ -73,9 +100,14 @@ const Cont = styled.div`
     grid-template-columns: 25% 75%;
     box-shadow: 0.5rem 0.5rem 0.5rem #00000029;
     border-radius: 1rem;
-
-    @media screen and (min-width: 720px) and (max-width: 1080px) {
-      grid-template-columns: 35% 65%;
+    @media (max-width: 768px) {
+      grid-template-columns: 100%;
+      
+      height: 100vh;
+      width: 100vw;
+      border-radius: 0;
     }
+
+  
   }
 `;

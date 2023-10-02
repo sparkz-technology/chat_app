@@ -9,6 +9,9 @@ const WelcomeContainer = styled.div`
     text-align: center;
     overflow: hidden;
     position: relative;
+    @media (max-width: 768px) {
+        display: none;
+    }
 
     
 

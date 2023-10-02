@@ -260,6 +260,9 @@ position  : relative;
   @media screen and (min-width: 720px) and (max-width: 1080px) {
     grid-template-rows: 15% 70% 15%;
   }
+  @media (max-width: 768px) {
+        border-radius: 0;
+    }
   .chat-header {
     display: flex;
     justify-content: space-between;

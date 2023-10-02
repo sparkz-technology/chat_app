@@ -175,6 +175,7 @@ const Container = styled.div`
     overflow: hidden;
     box-sizing: border-box;
     box-shadow: 0 0 0.5rem #00000029;
+    
 `;
 
 const Header = styled.div`
@@ -190,6 +191,9 @@ const Header = styled.div`
     h1 {
         color: white;
         font-size: 1.5rem;
+    }
+    @media (max-width: 768px) {
+        border-radius: 0;
     }
 `;
 
