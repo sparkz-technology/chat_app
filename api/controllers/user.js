@@ -37,9 +37,14 @@ exports.editUser = async (req, res, next) => {
     }
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      const error = new Error("Validation failed");
-      error.data = errors.array();
+      const error = new Error("Validation failed!");
       error.statusCode = 422;
+      error.data = errors.array();
+      error.message = error.data[0].msg;
+      if (error.data.length > 1) {
+        error.message = "Email id and username already exist!";
+        throw error;
+      }
       throw error;
     }
 

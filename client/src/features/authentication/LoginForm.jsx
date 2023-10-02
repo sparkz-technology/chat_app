@@ -39,6 +39,7 @@ const LoginForm = () => {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.email}
+          disabled={isLoading}
         />
         {formik.touched.email && formik.errors.email ? (
           <Error>{formik.errors.email}</Error>
@@ -54,6 +55,7 @@ const LoginForm = () => {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.password}
+          disabled={isLoading}
         />
         {formik.touched.password && formik.errors.password ? (
           <Error>{formik.errors.password}</Error>

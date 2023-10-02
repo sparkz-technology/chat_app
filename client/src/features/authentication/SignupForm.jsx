@@ -60,6 +60,7 @@ const SignUpForm = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={formik.values.name}
+              disabled={isLoading}
             />
             {formik.touched.name && formik.errors.name ? (
               <Error>{formik.errors.name}</Error>
@@ -78,6 +79,8 @@ const SignUpForm = () => {
               value={formik.values.username}
               maxLength="6"
               fontSize="1.2rem"
+              disabled={isLoading}
+
 
             />
             {formik.touched.username && formik.errors.username ? (
@@ -98,6 +101,8 @@ const SignUpForm = () => {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.email}
+          disabled={isLoading}
+
         />
         {formik.touched.email && formik.errors.email ? (
           <Error>{formik.errors.email}</Error>
@@ -113,6 +118,8 @@ const SignUpForm = () => {
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.password}
+          disabled={isLoading}
+
         />
         {formik.touched.password && formik.errors.password ? (
           <Error>{formik.errors.password}</Error>

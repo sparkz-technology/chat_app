@@ -12,7 +12,6 @@ const isAuth = async (req, res, next) => {
     }
     const token = authHeader.split(" ")[1];
     let decodedToken;
-    console.log(authHeader);
 
     try {
       decodedToken = jwt.verify(token, JWT_SECRET);

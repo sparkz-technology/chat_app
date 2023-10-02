@@ -7,14 +7,16 @@ function Logout() {
   const { mutate, isLoading } = useLogout();
 
   return (
-    <StyledButton onClick={mutate} disabled={isLoading}>
-      {isLoading ? <MiniSpinner /> : (
-        <>
+    <>
+      {isLoading ? <MiniSpinner style={{ margin: "auto" }} /> :
+        <StyledButton onClick={mutate} disabled={isLoading}>
+
           <ButtonText>Logout</ButtonText>
           <BiPowerOff size={20} />
-        </>
-      )}
-    </StyledButton>
+
+        </StyledButton>
+      }
+    </>
   );
 }
 
@@ -34,6 +36,7 @@ const StyledButton = styled.button`
   width: 100%;
   padding: 5px;
   gap: 10px;
+  margin: auto;
   border-radius: 5px;
   &:hover {
     background-color: #ebebeb;
@@ -48,6 +51,7 @@ const StyledButton = styled.button`
 const ButtonText = styled.p`
   margin:0px;
   text-align: start;
+  
 
 `;
 

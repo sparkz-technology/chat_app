@@ -16,6 +16,7 @@ export default function Chat() {
     if (currentUserId) {
       socket.current = io(API_URL, {
         transports: ["websocket"],
+
       });
       if (socket.current) {
         socket.current.on("connect", () => {
