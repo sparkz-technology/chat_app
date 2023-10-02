@@ -31,7 +31,7 @@ const uploadImage = multer({
   storage: storage,
   limits: { fileSize: fileSizes },
   fileFilter: fileFilter,
-}).single("image");
+}).single("file");
 
 const { editUserValidator } = require("../validators/user.js");
 const { getAllUsers, editUser, getUser } = require("../controllers/user.js");
