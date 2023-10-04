@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  message: "",
+  isTyping: false,
   isSettings: false,
   changeChat: null,
   selectedChat: null,
@@ -13,8 +13,8 @@ const ChatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
-    setMessage: (state, action) => {
-      state.message += action.payload;
+    setIstyping: (state, action) => {
+      state.isTyping = action.payload;
     },
     setIsSettings: (state, action) => {
       state.isSettings = action.payload;
@@ -31,6 +31,6 @@ const ChatSlice = createSlice({
   },
 });
 
-export const { setMessage, setIsSettings, setChangeChat, setSelectedChat, setShowUserDetails } = ChatSlice.actions;
+export const { setIstyping, setIsSettings, setChangeChat, setSelectedChat, setShowUserDetails } = ChatSlice.actions;
 
 export default ChatSlice.reducer;

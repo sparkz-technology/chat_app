@@ -1,40 +1,34 @@
-import { useEffect, useRef, useState } from "react";
-import { io } from "socket.io-client";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import Users from "../features/chat/Users";
 import Container from "../features/chat/Container";
-import { API_URL } from "../utils/Constant";
 import { useSelector } from "react-redux";
+import useSocket from "../features/chat/useSocket";
 
 
 export default function Chat() {
-  const socket = useRef();
+  // const socket = useRef();
+  const socket = useSocket();
 
 
   const currentUserId = localStorage.getItem("userId");
   useEffect(() => {
-    if (currentUserId) {
-      socket.current = io(API_URL, {
-        transports: ["websocket"],
-
+    if (currentUserId && socket) {
+      socket.on("connect", () => {
+        socket.emit("add-user", currentUserId);
       });
-      if (socket.current) {
-        socket.current.on("connect", () => {
-          socket.current.emit("add-user", currentUserId);
-        });
-        socket.current.on("connect_error", (error) => {
-          console.log("Socket connection error:", error);
-        });
-      }
-    }
-    return () => {
-      socket.current?.disconnect();
-      socket.current?.off();
 
-    }
+      socket.on("connect_error", (error) => {
+        console.log("Socket connection error:", error);
+      });
 
-  }, [currentUserId]);
+      return () => {
+        socket.disconnect();
+        socket.off();
+      };
+    }
+  }, [currentUserId, socket]);
   const { selectedChat: currentSelected } = useSelector((state) => state.chat);
   const [show, setShow] = useState(false)
   useEffect(() => {

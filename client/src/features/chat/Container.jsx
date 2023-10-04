@@ -39,46 +39,46 @@ export default function ChatContainer({ socket }) {
   }, [messagesData]);
 
   // for typing
-  const typingMsg = useSelector((state) => state.chat.message);
+  const isTypingMsg = useSelector((state) => state.chat.isTyping);
   useEffect(() => {
-    if (!socket.current) return;
+    if (!socket) return;
 
-    if (typingMsg !== "") {
-      socket.current.emit("typing", {
+    if (isTypingMsg === true) {
+      socket.emit("typing", {
         to: currentChat?._id,
         from: UserId,
       });
     }
-    socket.current.on("typing", (data) => {
+    socket.on("typing", (data) => {
       if (data.from === currentChat?._id) {
         setIsTyping(true);
       }
     }
     );
-  }, [typingMsg, currentChat, socket, UserId]);
+  }, [isTypingMsg, currentChat, socket, UserId]);
 
   useEffect(() => {
-    if (!socket.current) return;
+    if (!socket) return;
 
-    if (typingMsg === "") {
-      socket.current?.emit("stop-typing", {
+    if (isTypingMsg === false) {
+      socket?.emit("stop-typing", {
         to: currentChat?._id,
         from: UserId,
       });
     }
-    socket.current?.on("stop-typing", (data) => {
+    socket?.on("stop-typing", (data) => {
       if (data.from === currentChat?._id) {
         setIsTyping(false);
       }
     });
 
-  }, [socket, currentChat, UserId, typingMsg]);
+  }, [socket, currentChat, UserId, isTypingMsg]);
 
 
   const handleSendMsg = async (msg) => {
-    if (!socket.current) return;
+    if (!socket) return;
 
-    socket.current.emit("send-msg", {
+    socket.emit("send-msg", {
       to: currentChat?._id,
       from: UserId,
       msg,
@@ -92,8 +92,8 @@ export default function ChatContainer({ socket }) {
 
   useEffect(() => {
 
-    if (socket.current) {
-      const currentSocket = socket.current;
+    if (socket) {
+      const currentSocket = socket;
 
       currentSocket.on("msg-receive", (msg) => {
         setArrivalMessage({ fromSelf: false, message: msg });
@@ -115,11 +115,11 @@ export default function ChatContainer({ socket }) {
     , [messages]);
 
   useEffect(() => {
-    if (!socket.current) return;
+    if (!socket) return;
 
-    const currentSocket = socket.current;
+    const currentSocket = socket;
 
-    socket.current?.emit("check-online", currentChat?._id);
+    socket?.emit("check-online", currentChat?._id);
     return () => {
       currentSocket?.emit("check-offline", currentChat?._id);
     }
@@ -127,12 +127,12 @@ export default function ChatContainer({ socket }) {
   }, [currentChat, socket]);
 
   useEffect(() => {
-    const currentSocket = socket.current;
-    if (socket.current) {
-      socket.current.on("is-online", () => {
+    const currentSocket = socket;
+    if (socket) {
+      socket.on("is-online", () => {
         setIsOnline(true);
       });
-      socket.current.on("is-offline", (data) => {
+      socket.on("is-offline", (data) => {
         if (data === currentChat?._id)
           setIsOnline(false);
       });

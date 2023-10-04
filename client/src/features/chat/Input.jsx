@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiWinkSmile } from "react-icons/bi";
 import { IoMdSend } from "react-icons/io";
 import Picker from "emoji-picker-react";
@@ -67,21 +67,19 @@ const EmojiPickerContainer = styled.div`
 `;
 
 import { useOutsideClick } from "../../hooks/useOutsideClick";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import PropTypes from "prop-types";
-import { setMessage } from "./ChatSlice";
+import { setIstyping } from "./ChatSlice";
 Input.propTypes = {
   handleSendMsg: PropTypes.func.isRequired,
 };
 function Input({ handleSendMsg }) {
 
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  // const [message, setMessage] = useState("");
-  const message = useSelector((state) => state.chat.message);
+  const [message, setMessage] = useState("");
+  // const message = useSelector((state) => state.chat.message);
   const dispatch = useDispatch();
-
-
 
   const emojiPickerRef = useOutsideClick(() => {
     setShowEmojiPicker(false);
@@ -98,6 +96,9 @@ function Input({ handleSendMsg }) {
 
     }
   };
+  useEffect(() => {
+    message !== "" ? dispatch(setIstyping(true)) : dispatch(setIstyping(false));
+  }, [message, dispatch]);
 
   return (
     <>
@@ -107,7 +108,7 @@ function Input({ handleSendMsg }) {
           <EmojiPickerContainer ref={emojiPickerRef}>
             <Picker
               onEmojiClick={(emoji) =>
-                dispatch(setMessage(message + emoji.emoji))
+                setMessage((prev) => prev + emoji.emoji)
               }
             />
           </EmojiPickerContainer>
@@ -118,7 +119,7 @@ function Input({ handleSendMsg }) {
             type="text"
             name="message"
             value={message}
-            onChange={(e) => dispatch(setMessage(e.target.value))}
+            onChange={(e) => setMessage(e.target.value)}
             placeholder="Type a message..."
             autoFocus={true}
             autoComplete="off"
