@@ -46,6 +46,7 @@ export default function Chat() {
         setShow(false)
       }
     }
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);

@@ -14,7 +14,7 @@ const ChatSlice = createSlice({
   initialState,
   reducers: {
     setMessage: (state, action) => {
-      state.message = action.payload;
+      state.message += action.payload;
     },
     setIsSettings: (state, action) => {
       state.isSettings = action.payload;

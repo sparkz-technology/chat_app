@@ -233,17 +233,27 @@ const Contacts = styled.div`
 `;
 
 const ContactItem = styled.div`
-  background-color: ${colors.background};
   min-height: 2rem;
   cursor: pointer;
   width: 90%;
   border-radius: 0.2rem;
   padding: 0.4rem;
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem;
   align-items: center;
   transition: 0.5s ease-in-out;
+  border: 1px solid ${colors.secondary};
   box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.29);
+  &:hover {
+    background-color: ${colors.primary};
+    color: white;
+
+    .username {
+      h3 {
+        color: white;
+      }
+    }
+  }
   &:first-child {
     margin-top: 0.5rem;
   }

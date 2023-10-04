@@ -164,8 +164,6 @@ export default function ChatContainer({ socket }) {
           />
           <UserDetails onClick={() => {
             dispatch(setShowUserDetails(true));
-            console.log(showUserDetails);
-
           }}>
             <div className="avatar">
               <Avatar name={currentChat?.username} size="40" round={true} src={API_URL + currentChat?.avatarImage} />
