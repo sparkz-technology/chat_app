@@ -1,15 +1,17 @@
 Creating a Chat App with React, Socket.io, Express, MongoDB, Redux and TANStack
 
+Demo Link: https://chat-app-zeta-lyart.vercel.app
+
 # Table of Contents
+
 1. [Introduction](#introduction)
 2. [Features](#features)
 3. [Usage](#usage)
 4. [Technologies Used](#technologies-used)
 
-
 ## Introduction
 
-This repository contains a chat application built using React, Socket.io, Express, MongoDB, Redux  and TANStack. This application provides real-time chat functionality with features like typing status and online status. It's designed to be a modern, efficient, and scalable solution for building chat applications.
+This repository contains a chat application built using React, Socket.io, Express, MongoDB, Redux and TANStack. This application provides real-time chat functionality with features like typing status and online status. It's designed to be a modern, efficient, and scalable solution for building chat applications.
 
 ## Features
 
@@ -23,7 +25,6 @@ The chat app comes with the following features:
 6. **Responsive UI**: The user interface is designed to be responsive and user-friendly.
 7. **State Management**: Uses Redux for managing UI state and TANStack Query for remote state management.
 8. **Scalable**: Built with scalability in mind to handle a growing number of users.
-
 
 ## Usage
 
@@ -42,4 +43,3 @@ To use the chat application, follow these steps:
 - **MongoDB**: A NoSQL database for storing chat history.
 - **Redux**: A state management library for UI state.
 - **TANStack Query**: A client-side data-fetching and state management library for managing remote state.
-
