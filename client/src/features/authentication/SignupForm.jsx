@@ -129,7 +129,7 @@ const SignUpForm = () => {
           By clicking the Sign Up button, you agree to our Terms & Conditions
           and Privacy Policy.
         </p>
-        <Button type="submit">
+        <Button type="submit"        disabled={isLoading}>
           {isLoading ? <MiniSpinner /> : "Create Account"}
         </Button>
       </FormWrapper>
