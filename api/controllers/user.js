@@ -1,7 +1,5 @@
 const User = require("../models/user.js");
 const mongoose = require("mongoose");
-const path = require("path");
-const fs = require("fs");
 const { validationResult } = require("express-validator");
 
 exports.getAllUsers = async (req, res, next) => {
@@ -55,20 +53,7 @@ exports.editUser = async (req, res, next) => {
       throw error;
     }
 
-    if (avatarImage) {
-      if (user.isAvatarImageSet) {
-        const __dirname = path.resolve();
-        const filePath = path.join(__dirname, user.avatarImage);
-        fs.unlink(filePath, (err) => {
-          if (err) {
-            console.log(err);
-          }
-        });
-      }
-
-      user.avatarImage = `/images/${avatarImage}`;
-      user.isAvatarImageSet = true;
-    }
+    if (avatarImage) user.avatarImage = avatarImage;
     if (username) user.username = username;
     if (name) user.name = name;
     if (email) user.email = email;

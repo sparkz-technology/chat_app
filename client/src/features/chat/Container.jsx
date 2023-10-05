@@ -12,7 +12,6 @@ import TypingLoader from "../../ui/TypingLoader";
 import Welcome from "./Welcome";
 import BackButton from "../../ui/BackButton";
 import { setChangeChat, setSelectedChat, setShowUserDetails } from "./ChatSlice";
-import { API_URL } from "../../utils/Constant";
 import UserContainer from "./UserContainer";
 
 // eslint-disable-next-line react/prop-types
@@ -166,7 +165,7 @@ export default function ChatContainer({ socket }) {
             dispatch(setShowUserDetails(true));
           }}>
             <div className="avatar">
-              <Avatar name={currentChat?.username} size="40" round={true} src={API_URL + currentChat?.avatarImage} />
+              <Avatar name={currentChat?.username} size="40" round={true} src={currentChat?.avatarImage} />
             </div>
             <div className="username">
               <h3>{currentChat?.username}</h3>

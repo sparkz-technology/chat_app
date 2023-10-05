@@ -1,7 +1,6 @@
 import { useSelector } from "react-redux";
 import Avatar from "react-avatar";
 import useGetUserInfo from "./useGetUserInfo";
-import { API_URL } from "../../utils/Constant";
 import styled from "styled-components";
 
 const Label = styled.p`
@@ -86,43 +85,43 @@ const StyledUserContainer = styled.div`
 
 
 function UserContainer() {
-    const { changeChat } = useSelector((state) => state.chat);
-    const { currentUser } = useGetUserInfo(changeChat?._id);
+  const { changeChat } = useSelector((state) => state.chat);
+  const { currentUser } = useGetUserInfo(changeChat?._id);
 
-    return (
-        <StyledUserContainer>
-            <Container>
-                <Header>
-                    <div
-                        style={{
-                            width: "100%",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                            marginBottom: "20px",
+  return (
+    <StyledUserContainer>
+      <Container>
+        <Header>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginBottom: "20px",
 
-                        }}
-                    >
-                        <Title>User Info</Title>
-                    </div>
-                    <Avatar
-                        name={currentUser?.username}
-                        size="150"
-                        round={true}
-                        src={`${API_URL}${currentUser?.avatarImage}`}
-                    />
-                </Header>
-                <Info>
-                    <Label>Username:</Label>
-                    <Username>{currentUser?.username}</Username>
-                    <Label>Name:</Label>
-                    <Name>{currentUser?.name}</Name>
-                    <Label>Email:</Label>
-                    <Email>{currentUser?.email}</Email>
-                </Info>
-            </Container>
-        </StyledUserContainer>
-    );
+            }}
+          >
+            <Title>User Info</Title>
+          </div>
+          <Avatar
+            name={currentUser?.username}
+            size="150"
+            round={true}
+            src={currentUser?.avatarImage}
+          />
+        </Header>
+        <Info>
+          <Label>Username:</Label>
+          <Username>{currentUser?.username}</Username>
+          <Label>Name:</Label>
+          <Name>{currentUser?.name}</Name>
+          <Label>Email:</Label>
+          <Email>{currentUser?.email}</Email>
+        </Info>
+      </Container>
+    </StyledUserContainer>
+  );
 }
 
 export default UserContainer;

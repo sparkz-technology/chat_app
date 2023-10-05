@@ -11,7 +11,6 @@ import { setIsSettings } from '../chat/ChatSlice';
 import BackButton from '../../ui/BackButton';
 import useEditUser from './useEditUser';
 import MiniSpinner from '../../ui/MiniSpinner';
-import { API_URL } from '../../utils/Constant';
 import useGetUserInfo from '../chat/useGetUserInfo';
 
 function Settings() {
@@ -85,7 +84,7 @@ function Settings() {
                             name={currentUser?.name}
                             size="150"
                             round={true}
-                            src={!image ? API_URL + currentUser?.avatarImage : URL.createObjectURL(image)}
+                            src={!image ? currentUser?.avatarImage : URL.createObjectURL(image)}
                         />
 
                         {isEditing && (
