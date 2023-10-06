@@ -9,7 +9,7 @@ const useSocket = () => {
 
     useEffect(() => {
         const newSocket = io(API_URL, {
-            //   transports: ["websocket"],
+            transports: ["websocket"],
         });
         setSocket(newSocket);
 
