@@ -14,12 +14,12 @@ const messageRoutes = require("./routes/message.js");
 const { ORIGIN, NODE_ENV } = constant;
 
 const app = express();
-// const accessLogStream = fs.createWriteStream("./access.log", { flags: "a" });
 if (NODE_ENV === "development") {
+  const accessLogStream = fs.createWriteStream("./access.log", { flags: "a" });
   app.use(morgan("dev"));
+  app.use(morgan("combined", { stream: accessLogStream }));
 }
 
-// app.use(morgan("combined", { stream: accessLogStream }));
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use(
