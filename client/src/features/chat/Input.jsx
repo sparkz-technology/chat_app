@@ -107,6 +107,7 @@ function Input({ handleSendMsg }) {
         {showEmojiPicker && (
           <EmojiPickerContainer ref={emojiPickerRef}>
             <Picker
+              searchDisabled
               onEmojiClick={(emoji) =>
                 setMessage((prev) => prev + emoji.emoji)
               }
